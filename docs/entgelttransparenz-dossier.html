@@ -1,0 +1,457 @@
+<title>Gleichwertigkeits-Dossier</title>
+<style>
+:root{
+  --paper:#F5F5F7; --surface:#FFFFFF; --surface-2:#EAEAF0;
+  --ink:#1A1A22; --ink-2:#4C4C5A; --ink-3:#7A7A89;
+  --rule:#D8D8E0; --rule-hard:#B2B2C0;
+  --accent:#3B3A8C; --accent-wash:#E2E2F1;
+  --ochre:#7F6318; --ochre-wash:#F0E8D4;
+  --good:#3D6A49; --good-wash:#E0EAE2;
+  --alt:#1F5F66; --alt-wash:#DEEBEC;
+  --serif:'Iowan Old Style','Palatino Linotype',Palatino,'Book Antiqua','URW Palladio L',Georgia,serif;
+  --sans:ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;
+  --mono:ui-monospace,'SFMono-Regular','SF Mono',Menlo,Consolas,'Liberation Mono',monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#121218; --surface:#18181F; --surface-2:#212129;
+    --ink:#E7E7EC; --ink-2:#A9A9B8; --ink-3:#7C7C8B;
+    --rule:#2A2A34; --rule-hard:#3C3C48;
+    --accent:#9A98E8; --accent-wash:#22213F;
+    --ochre:#C8A653; --ochre-wash:#2B2515;
+    --good:#7CB28D; --good-wash:#1B2820;
+    --alt:#6BB4BC; --alt-wash:#152A2C;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#121218; --surface:#18181F; --surface-2:#212129;
+  --ink:#E7E7EC; --ink-2:#A9A9B8; --ink-3:#7C7C8B;
+  --rule:#2A2A34; --rule-hard:#3C3C48;
+  --accent:#9A98E8; --accent-wash:#22213F;
+  --ochre:#C8A653; --ochre-wash:#2B2515;
+  --good:#7CB28D; --good-wash:#1B2820;
+  --alt:#6BB4BC; --alt-wash:#152A2C;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.62;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1120px;margin:0 auto;padding:0 28px 96px}
+@media (max-width:720px){.wrap{padding:0 18px 64px}}
+h1,h2,h3,h4{font-family:var(--serif);font-weight:600;text-wrap:balance;margin:0;letter-spacing:-.005em}
+p{margin:0}
+a{color:var(--accent);text-decoration:none;border-bottom:1px solid color-mix(in srgb,var(--accent) 35%,transparent)}
+a:hover{border-bottom-color:var(--accent)}
+a:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3)}
+.num{font-variant-numeric:tabular-nums}
+
+.mast{border-bottom:2px solid var(--ink);padding:44px 0 20px;display:flex;flex-direction:column;gap:18px}
+.mast-top{display:flex;justify-content:space-between;align-items:baseline;gap:18px;flex-wrap:wrap}
+.mast h1{font-size:clamp(30px,4.6vw,50px);line-height:1.08}
+.mast .sub{font-size:17px;color:var(--ink-2);max-width:62ch}
+.meta{display:flex;flex-wrap:wrap;border-top:1px solid var(--rule);margin-top:6px}
+.meta div{flex:1 1 150px;padding:12px 16px 12px 0;border-right:1px solid var(--rule)}
+.meta div:last-child{border-right:0}
+.meta dt{font-family:var(--mono);font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink-3);margin:0 0 3px}
+.meta dd{margin:0;font-size:14px}
+
+section{padding-top:56px}
+.sec-head{display:flex;gap:16px;align-items:baseline;border-bottom:1px solid var(--rule-hard);padding-bottom:10px;margin-bottom:24px}
+.sec-head .idx{font-family:var(--mono);font-size:12px;color:var(--accent);letter-spacing:.08em;padding-top:4px}
+.sec-head h2{font-size:clamp(22px,2.6vw,29px);flex:1}
+.prose{max-width:68ch;display:flex;flex-direction:column;gap:16px}
+.prose h3{font-size:19px;margin-top:10px}
+.prose ul{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:8px}
+.prose li::marker{color:var(--ink-3)}
+strong{font-weight:650;color:var(--ink)}
+
+.verdict{margin-top:34px;border:1px solid var(--rule-hard);background:var(--surface);display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr)}
+@media (max-width:820px){.verdict{grid-template-columns:1fr}}
+.verdict-main{padding:26px 28px;display:flex;flex-direction:column;gap:14px}
+.verdict-side{padding:26px 28px;border-left:1px solid var(--rule);background:var(--surface-2);display:flex;flex-direction:column;gap:14px}
+@media (max-width:820px){.verdict-side{border-left:0;border-top:1px solid var(--rule)}}
+.stamp{display:inline-block;align-self:flex-start;font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);border:1.5px solid var(--accent);padding:5px 11px;transform:rotate(-1.2deg)}
+.verdict h2{font-size:27px}
+.verdict p{color:var(--ink-2);font-size:15.5px}
+.verdict .lead{color:var(--ink);font-size:16.5px}
+
+.tablewrap{overflow-x:auto;border:1px solid var(--rule-hard);background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:700px;font-size:14px}
+thead th{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);font-weight:500;text-align:center;padding:12px 8px;border-bottom:1px solid var(--rule-hard);vertical-align:bottom}
+thead th.l{text-align:left;padding-left:18px}
+tbody td{padding:11px 8px;border-bottom:1px solid var(--rule);text-align:center;font-variant-numeric:tabular-nums;color:var(--ink-2)}
+tbody td.l{text-align:left;padding-left:18px;color:var(--ink);font-weight:600}
+tbody tr:last-child td{border-bottom:0}
+tbody tr.top td{background:var(--surface-2)}
+tbody tr.dim td.l{font-weight:500;color:var(--ink-2)}
+.s5{color:var(--good);font-weight:700}.s4{color:var(--good)}.s3{color:var(--ink-2)}.s2{color:var(--ochre)}.s1{color:var(--ochre);font-weight:700}
+.total{text-align:right;padding-right:18px !important;white-space:nowrap}
+.bar{display:inline-block;width:56px;height:7px;background:var(--surface-2);border:1px solid var(--rule);vertical-align:middle;margin-right:9px;position:relative}
+.bar i{position:absolute;inset:0 auto 0 0;background:var(--accent);display:block}
+.total b{font-variant-numeric:tabular-nums;color:var(--ink);font-size:14px}
+caption{caption-side:bottom;text-align:left;padding:12px 18px;font-size:12.5px;color:var(--ink-3);border-top:1px solid var(--rule)}
+
+.timeline{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));border:1px solid var(--rule-hard);background:var(--surface);margin-top:8px}
+.timeline > div{padding:18px;border-right:1px solid var(--rule);display:flex;flex-direction:column;gap:6px}
+.timeline > div:last-child{border-right:0}
+.timeline .d{font-family:var(--mono);font-size:12px;letter-spacing:.08em;color:var(--accent)}
+.timeline .t{font-family:var(--serif);font-size:16.5px;color:var(--ink);line-height:1.3}
+.timeline p{font-size:13px;color:var(--ink-2);line-height:1.5}
+.timeline .past{opacity:.62}
+.timeline .crit{background:var(--accent-wash)}
+
+.map{display:flex;flex-direction:column;border:1px solid var(--rule-hard);background:var(--surface);margin-top:8px}
+.map > div{display:grid;grid-template-columns:250px 1fr;gap:16px;padding:15px 18px;border-bottom:1px solid var(--rule);align-items:baseline}
+.map > div:last-child{border-bottom:0}
+@media (max-width:700px){.map > div{grid-template-columns:1fr;gap:5px}}
+.map h4{font-family:var(--sans);font-size:14.5px;font-weight:650}
+.map h4 em{font-style:normal;font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;color:var(--ink-3);margin-left:8px;text-transform:uppercase}
+.map p{font-size:13.5px;color:var(--ink-2);line-height:1.5}
+
+.dossier{margin-top:40px;border:1px solid var(--rule-hard);background:var(--surface)}
+.dossier-head{padding:22px 26px;border-bottom:1px solid var(--rule-hard);display:flex;flex-wrap:wrap;gap:14px;align-items:baseline;justify-content:space-between}
+.dossier-head h3{font-size:24px}
+.dossier-head .tag{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3)}
+.dossier-body{padding:24px 26px;display:flex;flex-direction:column;gap:18px}
+.dossier-body p,.dossier-body li{font-size:15px;color:var(--ink-2)}
+.dossier-body .lede{color:var(--ink);font-size:15.5px}
+.dossier-body ul{margin:0;padding-left:19px;display:flex;flex-direction:column;gap:7px}
+.killer{border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);padding:18px 0;display:flex;flex-direction:column;gap:8px}
+.killer .eyebrow{color:var(--accent)}
+.killer p{color:var(--ink)}
+
+.swot{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid var(--rule-hard)}
+@media (max-width:760px){.swot{grid-template-columns:1fr}}
+.q{padding:20px 26px;border-right:1px solid var(--rule);border-bottom:1px solid var(--rule);display:flex;flex-direction:column;gap:10px}
+.q:nth-child(2n){border-right:0}
+@media (max-width:760px){.q{border-right:0}}
+.q h4{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-weight:500;display:flex;align-items:center;gap:9px}
+.q h4 span{display:inline-flex;width:19px;height:19px;align-items:center;justify-content:center;font-size:11px;border:1px solid currentColor}
+.q ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:8px;font-size:14.2px;line-height:1.55}
+.q-s h4{color:var(--good)}.q-s{background:linear-gradient(var(--good-wash),var(--good-wash)) no-repeat 0 0/100% 3px}
+.q-w h4{color:var(--ochre)}.q-w{background:linear-gradient(var(--ochre-wash),var(--ochre-wash)) no-repeat 0 0/100% 3px}
+.q-o h4{color:var(--alt)}.q-o{background:linear-gradient(var(--alt-wash),var(--alt-wash)) no-repeat 0 0/100% 3px}
+.q-r h4{color:var(--accent)}.q-r{background:linear-gradient(var(--accent-wash),var(--accent-wash)) no-repeat 0 0/100% 3px}
+
+.stack{display:flex;flex-direction:column;border:1px solid var(--rule-hard);background:var(--surface);margin-top:8px}
+.layer{display:grid;grid-template-columns:160px 1fr;border-bottom:1px solid var(--rule)}
+.layer:last-child{border-bottom:0}
+@media (max-width:700px){.layer{grid-template-columns:1fr}}
+.layer-l{padding:18px;border-right:1px solid var(--rule);background:var(--surface-2);display:flex;flex-direction:column;gap:3px}
+@media (max-width:700px){.layer-l{border-right:0;border-bottom:1px solid var(--rule);flex-direction:row;align-items:baseline;gap:10px}}
+.layer-l .n{font-family:var(--mono);font-size:11px;color:var(--accent);letter-spacing:.1em}
+.layer-l .t{font-family:var(--serif);font-size:17px;color:var(--ink)}
+.layer-r{padding:18px;display:flex;flex-wrap:wrap;gap:8px;align-items:flex-start}
+.chip{font-size:13px;padding:6px 11px;border:1px solid var(--rule-hard);color:var(--ink-2);background:var(--paper);line-height:1.35}
+.chip.det{border-style:dashed}
+.chip.llm{border-color:color-mix(in srgb,var(--accent) 45%,var(--rule-hard));color:var(--ink);background:var(--accent-wash)}
+.chip.human{border-color:var(--ochre);color:var(--ink);background:var(--ochre-wash);font-weight:650}
+.legend{display:flex;gap:20px;flex-wrap:wrap;margin-top:12px;font-size:12.5px;color:var(--ink-3)}
+.legend span{display:inline-flex;align-items:center;gap:8px}
+.legend i{width:22px;height:12px;border:1px solid var(--rule-hard);display:inline-block}
+.legend i.llm{border-color:color-mix(in srgb,var(--accent) 45%,var(--rule-hard));background:var(--accent-wash)}
+.legend i.det{border-style:dashed;background:var(--paper)}
+.legend i.human{border-color:var(--ochre);background:var(--ochre-wash)}
+
+.rule-quote{border-left:3px solid var(--accent);padding:14px 0 14px 20px;margin:8px 0;font-family:var(--serif);font-size:19px;line-height:1.45;color:var(--ink);max-width:60ch}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));border:1px solid var(--rule-hard);background:var(--surface);margin-top:8px}
+.steps > div{padding:18px;border-right:1px solid var(--rule);display:flex;flex-direction:column;gap:7px}
+.steps > div:last-child{border-right:0}
+.steps .when{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent)}
+.steps h4{font-family:var(--sans);font-size:14.5px;font-weight:650}
+.steps p{font-size:13.5px;color:var(--ink-2);line-height:1.5}
+.src{columns:2;column-gap:34px;font-size:13.5px;line-height:1.6;color:var(--ink-2);margin-top:8px}
+@media (max-width:700px){.src{columns:1}}
+.src li{break-inside:avoid;margin-bottom:8px}
+footer{margin-top:64px;border-top:1px solid var(--rule);padding-top:18px;font-size:12.5px;color:var(--ink-3);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+</style>
+
+<div class="wrap">
+
+<header class="mast">
+  <div class="mast-top">
+    <span class="eyebrow">Strategiedossier · Entgelttransparenz</span>
+    <span class="eyebrow num">Stand August 2026</span>
+  </div>
+  <h1>Gleichwertige Arbeit ist das Produkt</h1>
+  <p class="sub">Sieben Abschnitte der Entgelttransparenz-Wertschöpfungskette im Vergleich — und warum der einzige Schritt mit echtem KI-Hebel derselbe ist, den der gesamte bestehende Markt voraussetzt statt zu liefern.</p>
+  <dl class="meta">
+    <div><dt>Kettenabschnitte</dt><dd class="num">7 · davon 2 im Deep Dive</dd></div>
+    <div><dt>Empfehlung</dt><dd>Arbeitsbewertung &amp; Job-Architektur</dd></div>
+    <div><dt>Harter Stichtag</dt><dd class="num">7. Juni 2027</dd></div>
+    <div><dt>Größtes Risiko</dt><dd>Retention · Politik</dd></div>
+  </dl>
+</header>
+
+<div class="verdict">
+  <div class="verdict-main">
+    <span class="stamp">Empfehlung</span>
+    <h2>Arbeitsbewertung &amp; Job-Architektur</h2>
+    <p class="lead">Fast alle bestehenden Werkzeuge <em>rechnen</em> Entgeltlücken — auf Basis von Vergleichsgruppen, die das Unternehmen liefern muss. Genau die existiert im Mittelstand nicht. Der teuerste, rechtlich tragende und bislang unbesetzte Schritt ist die Arbeitsbewertung selbst: aus Stellenbeschreibungen, Verträgen und Tarifwerken eine konsistente, begründete Bewertung herzustellen. Urteilsarbeit an unstrukturiertem Text — heute ein Beratungsprojekt zu Tagessätzen.</p>
+  </div>
+  <div class="verdict-side">
+    <span class="eyebrow">Die Zange</span>
+    <p>Deutschland hat die Umsetzungsfrist zum 7. Juni 2026 gerissen; das Gesetz soll <strong>Anfang 2027</strong> in Kraft treten. Der Erstbericht ist trotzdem am <strong>7. Juni 2027</strong> fällig.</p>
+    <p>Wenige Monate zwischen Rechtsklarheit und Abgabetermin — und die Vorarbeit ist der eigentliche Aufwand. Genau diese Vorlaufzeit verkaufst du.</p>
+  </div>
+</div>
+
+<section id="zange">
+  <div class="sec-head"><span class="idx">01</span><h2>Das Zeitfenster</h2></div>
+  <div class="timeline">
+    <div class="past"><span class="d">7. Juni 2026</span><span class="t">Umsetzungsfrist</span><p>Von Deutschland gerissen. Kabinettsberatung von Juni auf August 2026 verschoben.</p></div>
+    <div><span class="d">seit 8. Juni 2026</span><span class="t">Zwei Hebel wirken bereits</span><p>Art. 157 AEUV gilt unmittelbar; Gerichte müssen bestehende Normen richtlinienkonform auslegen.</p></div>
+    <div><span class="d">Anfang 2027</span><span class="t">Deutsches Gesetz erwartet</span><p>Laut Bundesfamilienministerium — begründet unter anderem mit Belastungen für die Wirtschaft.</p></div>
+    <div class="crit"><span class="d">7. Juni 2027</span><span class="t">Erstbericht fällig</span><p>ab 250 Beschäftigte jährlich, 150–249 alle drei Jahre. 100–149 erst ab 2031.</p></div>
+  </div>
+  <div class="prose" style="margin-top:26px">
+    <p>Das ist exakt das Muster, das die E-Rechnungspflicht im Buchhaltungsdossier so wertvoll gemacht hat: <strong>ein bekannter, harter Stichtag, der noch vor uns liegt, in einem Markt, der ihn noch nicht bearbeitet hat.</strong> Wer erst auf das Gesetz wartet, hat keine Zeit mehr für die Vorarbeit.</p>
+    <h3>Was die Richtlinie über die Berichtspflicht hinaus verlangt</h3>
+    <ul>
+      <li><strong>Objektive, geschlechtsneutrale Entgelt- und Stellenbewertungssysteme</strong> müssen vorgehalten werden — nicht optional, nicht erst ab einer Größe.</li>
+      <li>Bei über <strong>5 % Entgeltunterschied je Kategorie gleichwertiger Arbeit</strong>, sachlich nicht gerechtfertigt und nicht binnen sechs Monaten beseitigt: <strong>gemeinsame Entgeltbewertung mit der Arbeitnehmervertretung</strong>, zwingend.</li>
+      <li><strong>Entgeltspanne in der Stellenausschreibung</strong> oder vor dem Bewerbungsgespräch; Verbot der Frage nach dem bisherigen Gehalt.</li>
+      <li><strong>Auskunftsanspruch</strong> der Beschäftigten über eigenes Entgelt und Durchschnittsentgelte vergleichbarer Gruppen.</li>
+      <li><strong>Beweislastumkehr</strong> zugunsten der Beschäftigten, dazu Schadensersatzansprüche.</li>
+    </ul>
+  </div>
+</section>
+
+<section id="markt">
+  <div class="sec-head"><span class="idx">02</span><h2>Der Markt ist nicht leer</h2></div>
+  <div class="prose"><p>Anders als beim Buchhaltungsdossier steht hier bereits ein besetztes Feld — die Fachpresse führt schon Marktüberblicke.</p></div>
+  <div class="map">
+    <div><h4>Kienbaum Pay Equity Tool <em>DE</em></h4><p>Gap-Analyse und Berichterstattung aus jahrzehntelanger Vergütungsberatung — <strong>und mit einem eigenen Anwendungs-Merkblatt eines Arbeitgeberverbands begleitet.</strong></p></div>
+    <div><h4>Mercer, WTW <em>international</em></h4><p>Beratungsprojekte mit Werkzeugunterstützung. Teuer, aber mit Vertrauensvorsprung im gehobenen Mittelstand.</p></div>
+    <div><h4>Figures <em>FR</em></h4><p>Vergütungsbenchmarking, HRIS-Integrationen, Mercer-Partnerschaft.</p></div>
+    <div><h4>Ravio <em>UK</em></h4><p>Echtzeit-Gehaltsbenchmarking.</p></div>
+    <div><h4>Competo, Ines Analytics <em>DE</em></h4><p>Pay-Equity-Analyse.</p></div>
+    <div><h4>Evenpay, Pay Gap, Skills Trust, Orbiq <em>EU</em></h4><p>Pay-Equity-Analyse und EU-Compliance.</p></div>
+  </div>
+  <div class="prose" style="margin-top:24px">
+    <p><strong>Die Verbandsbegleitung für Kienbaum ist die ernsteste Nachricht dieser Liste.</strong> Wenn ein Arbeitgeberverband ein Werkzeug mit eigenem Merkblatt flankiert, ist der billigste Vertriebskanal in den Mittelstand bereits belegt.</p>
+    <h3>Wo trotzdem eine Lücke ist</h3>
+    <p>Fast alle Anbieter lösen dieselbe Hälfte des Problems: Sie rechnen Lücken auf Vergleichsgruppen, die das Unternehmen liefern muss. Ein Betrieb mit 180 Beschäftigten hat aber gewachsene Stellenbezeichnungen, keine Systematik — und die Richtlinie verlangt nicht Gruppen nach Bauchgefühl, sondern <strong>Kategorien gleichwertiger Arbeit nach objektiven, geschlechtsneutralen Kriterien</strong>.</p>
+    <p class="rule-quote">Der unbesetzte Schritt ist zugleich der einzige der ganzen Kette, der wirklich KI-förmig ist.</p>
+    <h3>Der methodische Hintergrund</h3>
+    <p>Anerkannt ist die <strong>analytische Arbeitsbewertung</strong>: Anforderungsmerkmale werden je Stelle einzeln bewertet, je Kriterium entsteht ein Teilarbeitswert, aus Gewichtung und Addition ein Gesamtarbeitswert. Die etablierten Instrumente sind eg-check.de — das ausdrücklich auch die Arbeitsbewertung selbst prüft — und Logib beziehungsweise Logib-D.</p>
+    <p>Zwei Details aus der Forschung, die produktentscheidend sind: An Logib-D wird kritisiert, dass es mit Variablen arbeitet, die <strong>selbst diskriminierungsbehaftet sein können</strong>, und dass der Grundsatz „gleicher Lohn für gleichwertige Arbeit“ gerade nicht in den Blick gerät. Und: <strong>Die Gewichtung der Merkmale ist eine lohnpolitische Entscheidung</strong> — sie bestimmt die Hierarchie der Arbeitsplätze und damit der Einkommen. Daraus folgt die zentrale Architekturregel in Abschnitt 05.</p>
+  </div>
+</section>
+
+<section id="scorecard">
+  <div class="sec-head"><span class="idx">03</span><h2>Segmentvergleich</h2></div>
+  <div class="prose"><p>Bewertet werden Abschnitte der Wertschöpfungskette. Gewichte: KI-Hebel und Wettbewerbslücke je 2,0 · Zahlungsbereitschaft, regulatorischer Zwang und wiederkehrender Umsatz je 1,5 · Marktgröße, rechtliche Angreifbarkeit und Kanalzugang je 1,0.</p></div>
+  <div class="tablewrap" style="margin-top:16px">
+    <table>
+      <caption>Gewichteter Score, Maximum 58 Punkte. Rechtliche Angreifbarkeit ist invers codiert: 5 = unkritisch.</caption>
+      <thead><tr>
+        <th class="l">Kettenabschnitt</th><th>K1<br>Markt</th><th>K2<br>Zahlung</th><th>K3<br>Zwang</th><th>K4<br>KI</th><th>K5<br>Lücke</th><th>K6<br>Wiederkehr</th><th>K7<br>Recht</th><th>K8<br>Kanal</th><th style="text-align:right;padding-right:18px">Score</th>
+      </tr></thead>
+      <tbody>
+        <tr class="top"><td class="l">S2 Arbeitsbewertung &amp; Job-Architektur</td><td class="s4">4</td><td class="s5">5</td><td class="s5">5</td><td class="s5">5</td><td class="s5">5</td><td class="s2">2</td><td class="s3">3</td><td class="s3">3</td><td class="total"><span class="bar"><i style="width:80%"></i></span><b>46,5</b></td></tr>
+        <tr class="top"><td class="l">S4 Recruiting- &amp; Ausschreibungs-Compliance</td><td class="s5">5</td><td class="s3">3</td><td class="s4">4</td><td class="s3">3</td><td class="s4">4</td><td class="s5">5</td><td class="s4">4</td><td class="s4">4</td><td class="total"><span class="bar"><i style="width:72%"></i></span><b>42,0</b></td></tr>
+        <tr><td class="l">S6 Gemeinsame Entgeltbewertung</td><td class="s2">2</td><td class="s4">4</td><td class="s5">5</td><td class="s4">4</td><td class="s5">5</td><td class="s2">2</td><td class="s2">2</td><td class="s2">2</td><td class="total"><span class="bar"><i style="width:66%"></i></span><b>38,0</b></td></tr>
+        <tr class="dim"><td class="l">S5 Auskunftsansprüche bearbeiten</td><td class="s4">4</td><td class="s2">2</td><td class="s4">4</td><td class="s3">3</td><td class="s4">4</td><td class="s5">5</td><td class="s3">3</td><td class="s3">3</td><td class="total"><span class="bar"><i style="width:64%"></i></span><b>37,0</b></td></tr>
+        <tr class="dim"><td class="l">S7 Remediation- &amp; Budgetplanung</td><td class="s3">3</td><td class="s4">4</td><td class="s3">3</td><td class="s3">3</td><td class="s3">3</td><td class="s3">3</td><td class="s3">3</td><td class="s3">3</td><td class="total"><span class="bar"><i style="width:57%"></i></span><b>33,0</b></td></tr>
+        <tr class="dim"><td class="l">S3 Gap-Analyse &amp; Berichtserstellung</td><td class="s4">4</td><td class="s4">4</td><td class="s5">5</td><td class="s2">2</td><td class="s1">1</td><td class="s3">3</td><td class="s4">4</td><td class="s3">3</td><td class="total"><span class="bar"><i style="width:55%"></i></span><b>32,0</b></td></tr>
+        <tr class="dim"><td class="l">S1 Gehaltsbenchmarking</td><td class="s5">5</td><td class="s4">4</td><td class="s2">2</td><td class="s1">1</td><td class="s1">1</td><td class="s5">5</td><td class="s5">5</td><td class="s4">4</td><td class="total"><span class="bar"><i style="width:52%"></i></span><b>30,0</b></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="prose" style="margin-top:26px">
+    <p><strong>Marktgröße, Größenordnung:</strong> 2024 gab es in Deutschland rund 3,5 Millionen rechtliche Einheiten; Einheiten mit mehr als 250 Beschäftigten machen davon 0,5 % aus, und 12.241 Kapitalgesellschaften hatten im Jahresdurchschnitt 250 oder mehr abhängig Beschäftigte. Die Gruppe 100–249 liegt schätzungsweise bei 30.000–35.000 Unternehmen — <strong>diese Zahl ist zu verifizieren</strong> und der wackeligste Punkt der Marktrechnung.</p>
+    <ul>
+      <li><strong>S1 Gehaltsbenchmarking — nicht machen.</strong> Der Datenbestand ist der Burggraben, und Figures, Ravio und Mercer haben ihn. KI-Hebel praktisch null: ein Datensammel- und Statistikgeschäft.</li>
+      <li><strong>S3 Gap-Analyse — der offensichtliche Einstieg, deshalb besetzt.</strong> Kienbaum, Competo, Ines Analytics und die EU-Anbieter sitzen genau hier, und die Rechnung selbst ist trivial, sobald die Gruppen stehen. Wer hier einsteigt, verkauft ein Feature.</li>
+      <li><strong>S5 Auskunftsansprüche — richtige Wiederkehr, zu geringer Schmerz.</strong> Gute Ergänzung, kein Einstieg.</li>
+      <li><strong>S6 Gemeinsame Entgeltbewertung — fachlich der spannendste Teil, vertrieblich der schwerste.</strong> Sie tritt erst ein, wenn es bereits brennt, erfordert Mitwirkung der Arbeitnehmervertretung und ist ein einmaliges Ereignis.</li>
+    </ul>
+  </div>
+</section>
+
+<section id="deepdive">
+  <div class="sec-head"><span class="idx">04</span><h2>Deep Dive</h2></div>
+
+  <article class="dossier" style="margin-top:0">
+    <div class="dossier-head">
+      <h3>S2 · Arbeitsbewertung &amp; Job-Architektur</h3>
+      <span class="tag">Arbeitstitel „Gleichwert“ · Score 46,5</span>
+    </div>
+    <div class="dossier-body">
+      <p class="lede">Ein Agentensystem, das aus dem vorhandenen Material eines Mittelständlers eine prüffähige analytische Arbeitsbewertung erzeugt.</p>
+      <p><strong>Was das Produkt tut:</strong> Es liest Stellenbeschreibungen, Arbeitsverträge, Ausschreibungen, Organigramme, Tarifwerke und Betriebsvereinbarungen — also genau das heterogene, teils widersprüchliche Material, das jedes Unternehmen hat und niemand systematisiert. Es bewertet jede Stelle entlang der vier Merkmalsgruppen der Richtlinie: <strong>Kenntnisse und Fähigkeiten, Belastungen, Verantwortung, Arbeitsbedingungen</strong>. Jede Bewertung ist an eine Belegstelle gebunden — nicht „Verantwortung: 4“, sondern „Verantwortung: 4, weil Arbeitsvertrag Ziffer 3 Budgetverantwortung bis 50.000 € und Fachaufsicht für drei Personen vereinbart“. Es prüft Konsistenz über Bezeichnungen hinweg, bildet Kategorien gleichwertiger Arbeit, rechnet die Lücken je Kategorie und markiert die 5-%-Überschreitungen.</p>
+      <div class="killer">
+        <span class="eyebrow">Das unkopierbare Feature</span>
+        <p><strong>Die Verteidigungsakte.</strong> Wegen der Beweislastumkehr muss im Streitfall der Arbeitgeber zeigen, dass die Entgeltdifferenz sachlich gerechtfertigt ist. Das Produkt erzeugt daher zu jeder Kategorie und jeder Einzelbewertung eine geschlossene Beweiskette: welche Kriterien, welche Gewichtung, wer hat sie wann beschlossen, welche Belegstelle stützt welchen Teilarbeitswert, welche Konsistenzprüfungen liefen, was wurde bei welchem Widerspruch entschieden. Das ist kein Reporting — das ist das Aktenstück, mit dem die Personalleitung in den Gerichtstermin geht. <strong>Dafür wird bezahlt, nicht für eine Prozentzahl.</strong></p>
+      </div>
+    </div>
+    <div class="swot">
+      <div class="q q-s"><h4><span>S</span>Stärken</h4><ul>
+        <li><strong>Der einzige Kettenabschnitt mit echtem KI-Hebel.</strong> Alles andere ist Statistik auf gepflegten Daten. Bewertung ist Urteilsarbeit an unstrukturiertem Text — genau dort haben Sprachmodelle einen realen Vorsprung gegenüber Tabellen.</li>
+        <li>Harter Stichtag ohne Verhandlungsspielraum: 7. Juni 2027 für alle ab 150 Beschäftigten.</li>
+        <li><strong>Der Wettbewerb setzt voraus, was du herstellst.</strong> Kienbaum, Figures und Ravio beginnen dort, wo dein Produkt aufhört — das macht dich potenziell zum Vorprodukt der Kategorie statt zum Konkurrenten, mit Partnerschaften statt Preiskampf.</li>
+        <li>Hohe Zahlungsbereitschaft, weil die Alternative ein Beratungsprojekt zu Tagessätzen ist. Der Vergleichspreis ist Kienbaum, nicht eine HR-Software.</li>
+        <li><strong>Der Nutzen überlebt die Regulierung.</strong> Eine saubere Job-Architektur trägt Vergütungsbänder, Laufbahnmodelle und Recruiting — auch wenn das Gesetz milder ausfällt.</li>
+      </ul></div>
+      <div class="q q-w"><h4><span>W</span>Schwächen</h4><ul>
+        <li><strong>Das Retentionsproblem ist gravierend und muss vor der ersten Zeile Code gelöst sein.</strong> Eine Arbeitsbewertung ist ein Projekt, kein Abo; für 150–249 Beschäftigte ist der Bericht nur alle drei Jahre fällig. Die Antwort muss im Produkt stecken — siehe S4.</li>
+        <li><strong>Fachlich anspruchsvoll und angreifbar.</strong> Arbeitsbewertung ist ein etabliertes Feld mit Methodenstreit. Ein Betriebsrat mit gewerkschaftlicher Beratung wird deine Kriterien und vor allem deine Gewichtung hinterfragen — zu Recht.</li>
+        <li><strong>Der billigste Kanal ist besetzt.</strong> Kienbaum hat die Verbandsbegleitung; du müsstest dir den Zugang zum Mittelstand teurer kaufen.</li>
+        <li>Kaltstart ohne Referenzen: Niemand macht seine erste Entgeltgleichheitsprüfung mit einem unbekannten Anbieter. Die ersten fünf Kunden brauchen einen Namen daneben.</li>
+      </ul></div>
+      <div class="q q-o"><h4><span>O</span>Chancen</h4><ul>
+        <li><strong>Der Verzug der deutschen Umsetzung ist dein Vertriebsargument.</strong> Solange Unternehmen auf das Gesetz warten, verlieren sie die Vorlaufzeit, die sie für die Arbeitsbewertung brauchen. Genau diese Vorlaufzeit verkaufst du.</li>
+        <li><strong>Arbeitsrechtskanzleien als Kanal.</strong> Sie beraten zur Richtlinie, wollen aber die Datenarbeit nicht leisten — dasselbe Muster wie bei Steuerkanzleien: eine Kanzlei bringt zwanzig Mandanten.</li>
+        <li>Öffentliche Arbeitgeber sind bereits vorbereitungspflichtig, haben Tarifstrukturen als Datenbasis und beschaffen planbar.</li>
+        <li><strong>EU-Skalierung ohne Neupositionierung.</strong> Die Richtlinie gilt überall, die Frist auch. Anders als beim Steuerrecht ist die Fachlogik grenzüberschreitend weitgehend identisch — selten und wertvoll.</li>
+        <li>Bei acht bis zehn Anbietern in einem regulierungsgetriebenen Markt wird zugekauft. Wer das Vorprodukt besitzt, das alle brauchen, ist ein naheliegendes Ziel.</li>
+      </ul></div>
+      <div class="q q-r"><h4><span>R</span>Risiken</h4><ul>
+        <li><strong>Politisches Risiko, und es ist real.</strong> Die Verzögerung wird ausdrücklich mit Belastungen für die Wirtschaft begründet. Eine deutliche Entschärfung würde die Dringlichkeit beschädigen — das gravierendste Einzelrisiko dieses Feldes.</li>
+        <li><strong>Mitbestimmung.</strong> Entlohnungsgrundsätze und Bewertungssysteme berühren die Mitbestimmung des Betriebsrats. Ein reines Arbeitgeberwerkzeug wird in mitbestimmten Betrieben blockiert. Die Betriebsratssicht gehört ins Produkt, nicht ins Vertriebsgespräch.</li>
+        <li><strong>RDG-Grenze.</strong> Die Würdigung, ob eine Entgeltdifferenz sachlich gerechtfertigt ist, ist Rechtsdienstleistung — dasselbe Muster wie § 5 StBerG im Buchhaltungsdossier. Strukturieren und dokumentieren ja, würdigen nein.</li>
+        <li><strong>Diskriminierung durch das Werkzeug selbst.</strong> Wenn deine Kriterien typische Frauentätigkeiten systematisch abwerten — der Vorwurf, der Logib-D trifft —, produzierst du dokumentiert das Problem, das du lösen sollst. Der größte in diesem Feld mögliche Reputationsschaden.</li>
+      </ul></div>
+    </div>
+  </article>
+
+  <article class="dossier">
+    <div class="dossier-head">
+      <h3>S4 · Recruiting- &amp; Ausschreibungs-Compliance</h3>
+      <span class="tag">Score 42,0 · die zweite Hälfte, nicht die Alternative</span>
+    </div>
+    <div class="dossier-body">
+      <p class="lede">Die Richtlinie verlangt die Entgeltspanne in der Ausschreibung oder vor dem Bewerbungsgespräch und verbietet die Frage nach dem bisherigen Gehalt. Das betrifft <strong>jede offene Stelle in jedem Unternehmen, laufend</strong> — der einzige Abschnitt mit natürlicher Wiederkehr und dem größten adressierbaren Kreis.</p>
+      <div class="killer">
+        <span class="eyebrow">Warum es allein nicht trägt — und zusammen alles ändert</span>
+        <p>Eine Gehaltsspanne in eine Stellenanzeige zu schreiben, ist kein Unternehmen. <strong>In Kombination mit S2 ist es die Lösung des Retentionsproblems:</strong> Die Ausschreibung zieht die Spanne aus der Job-Architektur, jede neue Stelle wird beim Anlegen eingewertet, jede Umstrukturierung aktualisiert das Modell. Aus dem Projektartefakt wird ein System, das jede Woche benutzt wird — und damit ein Abo, das man nicht kündigt, ohne die Compliance zu verlieren.</p>
+      </div>
+      <p><strong>Empfehlung: S2 als Einstieg und Preisanker, S4 als Bindung.</strong> Getrennt sind beide schwach.</p>
+    </div>
+  </article>
+</section>
+
+<section id="architektur">
+  <div class="sec-head"><span class="idx">05</span><h2>Architektur</h2></div>
+  <div class="prose">
+    <p class="rule-quote">Das Modell stellt Anforderungsmerkmale fest und belegt sie. Die Gewichtung dieser Merkmale ist eine dokumentierte Entscheidung des Unternehmens — niemals eine Modellausgabe.</p>
+    <p>Der Grund ist nicht technische Vorsicht, sondern die Sache selbst: Die Gewichtung bestimmt die Hierarchie der Arbeitsplätze und damit der Einkommen. Sie ist eine unternehmens- und lohnpolitische Entscheidung, in mitbestimmten Betrieben eine mitbestimmungspflichtige. Ein Modell, das sie stillschweigend trifft, ist rechtlich wertlos und politisch angreifbar. Das Produkt muss sie <strong>sichtbar, verhandelbar und protokolliert</strong> machen — inklusive der Simulation, wie eine andere Gewichtung Kategorien und Lücken verschiebt.</p>
+  </div>
+
+  <div class="stack" style="margin-top:26px">
+    <div class="layer">
+      <div class="layer-l"><span class="n">Schicht 1</span><span class="t">Material</span></div>
+      <div class="layer-r">
+        <span class="chip det">Stellenbeschreibungen</span><span class="chip det">Arbeitsverträge</span><span class="chip det">Organigramme, Tarifwerke, Betriebsvereinbarungen</span><span class="chip det">HRIS: Entgelt, Geschlecht, Eintritt, Teilzeit</span>
+      </div>
+    </div>
+    <div class="layer">
+      <div class="layer-l"><span class="n">Schicht 2</span><span class="t">Merkmale</span></div>
+      <div class="layer-r">
+        <span class="chip llm">Anforderungs-Agent · Merkmale je Stelle, mit wörtlicher Belegstelle</span>
+        <span class="chip llm">Widerspruchs-Agent · Vertrag vs. Beschreibung vs. gelebte Aufgabe</span>
+      </div>
+    </div>
+    <div class="layer">
+      <div class="layer-l"><span class="n">Schicht 3</span><span class="t">Bewertung</span></div>
+      <div class="layer-r">
+        <span class="chip det">Teilarbeitswert je Kriterium · regelbasiert</span>
+        <span class="chip human">Gewichtungs-Cockpit · menschliche Entscheidung</span>
+        <span class="chip det">Gesamtarbeitswert → Kategorien gleichwertiger Arbeit</span>
+      </div>
+    </div>
+    <div class="layer">
+      <div class="layer-l"><span class="n">Schicht 4</span><span class="t">Prüfung</span></div>
+      <div class="layer-r">
+        <span class="chip llm">Konsistenz · gleiche Tätigkeit = gleicher Wert</span>
+        <span class="chip llm">Bias-Prüfung der Kriterien und Gewichte</span>
+        <span class="chip det">Entgeltlücken je Kategorie · 5-%-Schwelle</span>
+      </div>
+    </div>
+    <div class="layer">
+      <div class="layer-l"><span class="n">Schicht 5</span><span class="t">Ausgabe</span></div>
+      <div class="layer-r">
+        <span class="chip llm">Verteidigungsakte</span><span class="chip det">Bericht nach Richtlinie</span><span class="chip det">Betriebsratssicht</span><span class="chip det">Entgeltspannen für Ausschreibungen</span>
+      </div>
+    </div>
+  </div>
+  <div class="legend">
+    <span><i class="llm"></i> modellgetrieben</span>
+    <span><i class="det"></i> deterministisch</span>
+    <span><i class="human"></i> menschliche Entscheidung, protokolliert</span>
+  </div>
+
+  <div class="prose" style="margin-top:32px">
+    <h3>Vier Mechanismen, die über Erfolg entscheiden</h3>
+    <ul>
+      <li><strong>Belegpflicht für jede Bewertung.</strong> Kein Punktwert ohne wörtliche Fundstelle im Quelldokument. Das ist die Grundlage der Verteidigungsakte und zugleich die wirksamste Halluzinationsbremse: Ein Merkmal ohne Beleg wird nicht bewertet, sondern zur Klärung vorgelegt.</li>
+      <li><strong>Widersprüche sichtbar machen, nicht auflösen.</strong> Die Stellenbeschreibung ist von 2019, der Vertrag von 2015, tatsächlich macht die Person seit 2023 etwas anderes. Ein Agent, der das glättet, produziert eine hübsche und falsche Bewertung. Der Widerspruch selbst ist das wertvollste Ergebnis.</li>
+      <li><strong>Die Gewichtung ist ein Bedienelement, keine Ausgabe.</strong> Mit Simulation: Wenn körperliche Belastung höher und formale Qualifikation niedriger gewichtet wird — wie verschieben sich Kategorien und Lücken? Genau dieses Gespräch müssen Arbeitgeber und Betriebsrat führen. Ein Werkzeug, das es strukturiert, ist in mitbestimmten Betrieben nicht blockierbar, sondern erwünscht.</li>
+      <li><strong>Versionierung mit Stichtagsbezug.</strong> Ein Bericht zum 7. Juni 2027 muss Jahre später exakt reproduzierbar sein — inklusive der damals gültigen Gewichtung und der Person, die sie beschlossen hat. Das gehört ins erste Datenmodell.</li>
+    </ul>
+    <h3>Datenschutz</h3>
+    <p>Verarbeitet werden Entgelt, Geschlecht und Beschäftigungsdaten; in kleinen Kategorien sind Einzelpersonen trivial reidentifizierbar. Daraus folgen Mindestgruppengrößen bei jeder Ausgabe, strikte Rollentrennung zwischen Personalabteilung und Betriebsratssicht, EU-Verarbeitung und eine Datenschutz-Folgenabschätzung, die du dem Kunden fertig mitlieferst. Letzteres ist — wie das Vertragspaket beim Kanzleiprodukt — ein Vertriebsvorteil, kein Aufwand.</p>
+  </div>
+</section>
+
+<section id="modell">
+  <div class="sec-head"><span class="idx">06</span><h2>Geschäftsmodell &amp; erste zwölf Monate</h2></div>
+  <div class="tablewrap">
+    <table style="min-width:560px">
+      <thead><tr><th class="l">Plan</th><th class="l">Preis</th><th class="l">Inhalt</th></tr></thead>
+      <tbody>
+        <tr><td class="l">Readiness-Check</td><td class="l" style="font-weight:400">kostenlos</td><td class="l" style="font-weight:400">20 Stellen eingewertet, Konsistenzbefunde, grobe Lückenschätzung</td></tr>
+        <tr><td class="l">Aufbau der Job-Architektur</td><td class="l" style="font-weight:400">8.000–25.000 € einmalig</td><td class="l" style="font-weight:400">vollständige Bewertung, Kategorien, Verteidigungsakte, Betriebsratssicht</td></tr>
+        <tr><td class="l">Pflege &amp; Compliance</td><td class="l" style="font-weight:400">400–1.200 €/Monat</td><td class="l" style="font-weight:400">Neueinstellungen einwerten, Entgeltspannen, Auskunftsansprüche, jährliche Neuberechnung, Bericht</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="prose" style="margin-top:20px"><p>Die Aufteilung ist bewusst: <strong>Das Einmalprojekt trägt die Akquisekosten, das Abo trägt das Unternehmen.</strong> Preisanker ist das Beratungsprojekt, nicht die HR-Software.</p></div>
+  <div class="steps">
+    <div><span class="when">Monat 0–2</span><h4>Methodik prüfen lassen</h4><p>Gegenprüfung mit einer Arbeitsrechtskanzlei und einer Arbeitsbewertungs-Expertin. 60 echte Stellenbeschreibungen einwerten und gegen eine manuelle Expertenbewertung halten. <strong>Ohne diesen Abgleich existiert kein Produkt</strong> — Übereinstimmung mit dem menschlichen Urteil ist hier das Äquivalent zur Kontierungsgenauigkeit.</p></div>
+    <div><span class="when">Monat 3–5</span><h4>Design-Partner</h4><p>Zwei Betriebe mit 150–400 Beschäftigten, davon einer mitbestimmt. Schichten 1–4 und die Verteidigungsakte. Zielmarke: Der Betriebsrat akzeptiert die Methodik.</p></div>
+    <div><span class="when">Monat 6–9</span><h4>Prüfen und ausgeben</h4><p>Bias-Prüfung, Gewichtungssimulation, Berichtsausgabe. Erste zahlende Projekte. Ziel: fünf abgeschlossene Architekturen mit Referenzfreigabe.</p></div>
+    <div><span class="when">Monat 10–12</span><h4>Vom Projekt zum Abo</h4><p>S4-Modul, Umstellung der Erstkunden auf die Pflege, Kanalaufbau über Arbeitsrechtskanzleien. <strong>Bis Frühjahr 2027 muss die Vertriebsmaschine stehen</strong> — danach ist der Erstbericht abgegeben und die Dringlichkeit sinkt für drei Jahre.</p></div>
+  </div>
+</section>
+
+<section id="risiken">
+  <div class="sec-head"><span class="idx">07</span><h2>Die drei größten Risiken</h2></div>
+  <div class="prose">
+    <ul>
+      <li><strong>Politisches Risiko.</strong> Wird die deutsche Umsetzung entschärft oder erneut verschoben, verlierst du den Kaufanlass. Gegenmittel: Positionierung auf die Job-Architektur als betriebswirtschaftlichen Wert, nicht ausschließlich auf Compliance — dann überlebt das Produkt eine milde Gesetzeslage.</li>
+      <li><strong>Das Retentionsproblem.</strong> Einmalprojekt mit Dreijahresturnus ist die schlechteste denkbare Abo-Struktur. Wenn S4 nicht funktioniert, ist das Geschäft ein Beratungsunternehmen mit Softwareunterstützung — auch das kann profitabel sein, aber es skaliert anders.</li>
+      <li><strong>Methodische Angreifbarkeit.</strong> Deine Bewertung muss einen kritischen Betriebsrat, eine Gewerkschaftsberatung und im Zweifel ein Arbeitsgericht überstehen. Ein einziger öffentlich gewordener Fall, in dem dein Werkzeug typische Frauentätigkeiten systematisch abgewertet hat, beendet das Unternehmen. Deshalb steht die Bias-Prüfung als eigener Agent im System und nicht als Absatz im Handbuch.</li>
+    </ul>
+  </div>
+</section>
+
+<section id="quellen">
+  <div class="sec-head"><span class="idx">—</span><h2>Quellen</h2></div>
+  <ul class="src">
+    <li><a href="https://de.wikipedia.org/wiki/Richtlinie_(EU)_2023/970_(Entgelttransparenzrichtlinie)">Richtlinie (EU) 2023/970 — Überblick</a></li>
+    <li><a href="https://www.personalwirtschaft.de/news/verguetung/eu-entgelttransparenzrichtlinie-deutschland-verpasst-frist-das-sind-die-konsequenzen-203783/">Personalwirtschaft — Deutschland verpasst die Frist</a></li>
+    <li><a href="https://www.noerr.com/de/insights/keine-rechtzeitige-umsetzung-der-eu-entgelttransparenzrichtlinie-in-deutsches-recht-was-gilt-nach-dem-7-juni-2026">Noerr — Was gilt nach dem 7. Juni 2026?</a></li>
+    <li><a href="https://www.grantthornton.de/themen/2026/eu-entgelttransparenzrichtlinie-ist-der-7-juni-2026-ein-harter-stichtag/">Grant Thornton — Ist der 7. Juni 2026 ein harter Stichtag?</a></li>
+    <li><a href="https://www.roedl.com/insights/eu-entgelttransparenzrichtlinie-2023-970-neue-pflichten-handlungsbedarf-oeffentliche-arbeitgeber/">Rödl — Pflichten für öffentliche Arbeitgeber</a></li>
+    <li><a href="https://www.deloitte.com/de/de/services/tax/perspectives/eu-entgelttransparenzrichtlinie.html">Deloitte — EU-Entgelttransparenzrichtlinie</a></li>
+    <li><a href="https://www.ihk-bonn.de/recht-und-steuern/recht/entgelttransparenzrichtlinie">IHK Bonn/Rhein-Sieg — Entgelttransparenzrichtlinie</a></li>
+    <li><a href="https://www.personalwirtschaft.de/news/verguetung/pay-equity-tools-im-marktueberblick-202382/">Personalwirtschaft — Pay-Equity-Tools im Marktüberblick</a></li>
+    <li><a href="https://payequity.kienbaum.com/">Kienbaum Pay Equity Tool</a></li>
+    <li><a href="https://www.baymevbm.de/baymevbm/ServiceCenter/Personal/Entgelt-Leistungen/Entgelt/Entgelttransparenz/Merkblatt-Kienbaum-Pay-Equity-Tool.jsp">bayme vbm — Merkblatt zum Kienbaum Pay Equity Tool</a></li>
+    <li><a href="https://www.mercer.com/de-de/insights/talent-and-transformation/diversity-equity-and-inclusion/pay-equity-eu/">Mercer — Pay Equity und Entgelttransparenz in der EU</a></li>
+    <li><a href="https://www.antidiskriminierungsstelle.de/SharedDocs/Glossar_Entgeltgleichheit/DE/15_Gleiche_gleichwertige_Arbeit.html">Antidiskriminierungsstelle — Gleiche und gleichwertige Arbeit</a></li>
+    <li><a href="https://boeckler.de/22497_22502.htm">Hans-Böckler-Stiftung — eg-check zur Entgeltgleichheit</a></li>
+    <li><a href="https://www.boeckler.de/de/magazin-mitbestimmung-2744-lohnungleichheit-im-test-10776.htm">Hans-Böckler-Stiftung — Lohnungleichheit im Test (Kritik an Logib-D)</a></li>
+    <li><a href="https://de.wikipedia.org/wiki/Arbeitsbewertung">Arbeitsbewertung — analytische Verfahren und Gewichtung</a></li>
+    <li><a href="https://lohntransparenz.eu/index.php/2025/09/19/entgelttransparenzrichtlinie-was-bedeutet-gleichwertige-arbeit/">Infoportal Lohntransparenz — Was bedeutet „gleichwertige Arbeit“?</a></li>
+    <li><a href="https://www.destatis.de/DE/Themen/Branchen-Unternehmen/Unternehmen/Unternehmensregister/_aktuell-unternehmenregister.html">Statistisches Bundesamt — 3,5 Mio. Rechtliche Einheiten 2024</a></li>
+  </ul>
+</section>
+
+<footer>
+  <span>Strategiedossier · Entgelttransparenz</span>
+  <span class="num">Stand August 2026 · Schwesterdokument zum Nischendossier KI-Buchhaltung</span>
+</footer>
+
+</div>
