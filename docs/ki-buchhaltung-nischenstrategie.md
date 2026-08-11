@@ -52,12 +52,17 @@ Acht Kriterien, gewichtet nach ihrer Aussagekraft für ein KI-natives Produkt ei
 |---|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|
 | **N2 Gastronomie & Food-Service** | 4 | 3 | 5 | 5 | 5 | 4 | 4 | 4 | **47,5** |
 | **N3 Handwerk & Bau-Nebengewerbe** | 5 | 4 | 4 | 5 | 3 | 4 | 3 | 4 | **44,5** |
-| **N1 E-Commerce / Marktplatzhändler** | 3 | 4 | 5 | 2 | 5 | 3 | 4 | 3 | **39,5** |
+| **N3b E-Commerce-GmbH, hohes Volumen** † | 2 | 5 | 5 | 3 | 5 | 4 | 4 | 4 | **44,5** |
+| **N1 E-Commerce / Marktplatzhändler (breit)** | 3 | 4 | 5 | 2 | 5 | 3 | 4 | 3 | **39,5** |
 | **N8 Transport, Kurier & Sub-Spedition** | 3 | 3 | 4 | 4 | 4 | 4 | 3 | 3 | **39,5** |
 | N4 Heilberufe & Praxen | 3 | 5 | 3 | 3 | 3 | 3 | 3 | 3 | 36,0 |
 | N5 Vermieter & kleine WEG-Verwaltung | 4 | 2 | 3 | 4 | 3 | 3 | 3 | 3 | 34,5 |
 | N6 Vereine & gemeinnützige Organisationen | 4 | 1 | 4 | 4 | 2 | 5 | 2 | 2 | 34,0 |
 | N7 Agenturen & Professional Services | 3 | 3 | 2 | 3 | 4 | 1 | 3 | 1 | 28,0 |
+| N9 Vermögensverwaltende Holdings („Spardosen-GmbH") † | 2 | 4 | 3 | 1 | 3 | 3 | 4 | 3 | 30,5 |
+| N10 Self-Hosted / Open Source † | 2 | 1 | 2 | 3 | 2 | 4 | 3 | 1 | 25,5 |
+
+† Nachträglich geprüfte Ansätze, siehe Abschnitt 9.
 
 ### Kurzbegründungen der nicht weiterverfolgten Nischen
 
@@ -395,6 +400,60 @@ Ich empfehle für alle drei Nischen **Modell 2** — und zwar von Anfang an, wei
 
 ---
 
+## 9. Nachtrag: drei nachträglich geprüfte Ansätze
+
+### 9.1 Vermögensverwaltende Holdings („Spardosen-GmbH") — Score 30,5
+
+**Verdikt: nicht verfolgen.** Die Arbitrage, auf der die Idee beruht — der Steuerberater nimmt 2.000 €/Jahr für 40 Belege —, wird bereits von mehreren Anbietern ausgenutzt, und der Preis ist unten: Resolvio bietet Jahresabschluss, Steuererklärungen und Bundesanzeiger-Offenlegung zum Festpreis von 389 €/Jahr, b'steuern ab 65 €/Monat, steueragenten.de wirbt mit automatisierter Wertpapierbuchhaltung, FELSFO mit automatisierter Holding-Verwaltung. Du kämst als Vierter oder Fünfter in einen bereits entschiedenen Preiskampf.
+
+Drei strukturelle Probleme kommen hinzu:
+
+- **Der KI-Hebel ist praktisch null.** 20–80 Belege im Jahr (Depotauszug, Bankzinsen, StB-Rechnung, Notar, IHK-Beitrag). Es gibt nichts zu verstehen. Die Arbeit ist Jahresabschluss und Steuererklärung — ein deterministisches Formularproblem.
+- **Die gesamte Wertschöpfung ist Vorbehaltsaufgabe.** KSt- und GewSt-Erklärung sowie E-Bilanz fallen nicht unter die Teilöffnung des § 6 StBerG für die laufende Buchführung. In den Nischen aus Abschnitt 4 war die Kanzlei ein Baustein — hier ist sie das gesamte Produkt.
+- **§ 50a StBerG verbietet berufsfremde Kapitalgeber.** Anteile an einer Steuerberatungsgesellschaft dürfen nur Berufsträger halten, die im Unternehmen mitwirken; eine reine Finanzbeteiligung ist unzulässig. Nicht VC-finanzierbar, ohne Steuerberater als Mitgründer nicht baubar.
+
+**Was interessant bleibt:** die automatisierte Wertpapierbuchhaltung — Depot → HGB-Bilanz mit § 8b KStG, Streubesitzgrenze nach § 8b Abs. 4 KStG, InvStG-Teilfreistellung, Vorabpauschale. Das ist echte Fachlogik, aber eine Komponente für den Verkauf an Kanzleien, kein Unternehmen — und bereits im Markt.
+
+### 9.2 Self-Hosted / Open Source — Score 25,5
+
+**Verdikt: nicht als Geschäftsmodell, aber als Open-Core-Strategie wertvoll.**
+
+Der eingebaute Widerspruch: Der Wert des Produkts ist der Agent, der Agent braucht Inferenz. Die läuft entweder in deiner Cloud — dann ist das Datenhoheits-Versprechen und damit der einzige Kaufgrund hinfällig — oder auf der Hardware des Kunden, und dann schrumpft die Zielgruppe auf Betriebe, die eine GPU betreiben und gleichzeitig 3.000 Belege im Monat buchen. Dazu:
+
+- Die zahlungsunwilligste Zielgruppe des Markts, die dich zudem forken kann.
+- GoBD-Unveränderbarkeit ist bei selbst betriebener Datenbank kaum nachweisbar — der Kunde hat Schreibrechte auf sein eigenes Journal. Technisch lösbar (Append-only, Hash-Ketten), aber die Beweislast liegt beim Betreiber.
+- Der glaubwürdigste OSS-Konkurrent hat den Compliance-Beweis bereits: Odoo verfügt seit Version 18 über ein IDW PS 880-Testat für den Standardumfang — mit der entscheidenden Einschränkung, dass jede Anpassung aus dem Testat fällt. Dieselbe Hürde müsstest du nehmen.
+- Der Einwand ist billiger lösbar: EU-Hosting, AV-Vertrag, kein Training auf Kundendaten und ein Löschkonzept erledigen 95 % der Datenhoheits-Bedenken zu 5 % der Kosten.
+
+**Die richtige Stelle für die Idee ist Open Core.** Stelle die langweilige, teure Infrastruktur unter freie Lizenz — DSFinV-K-Parser, XRechnung/ZUGFeRD-Bibliothek, DATEV-EXTF-Writer, SKR03/04-Mapping und vor allem die Steuer-Regel-DSL aus Abschnitt 6.4. Verkauft wird die Cloud mit den Agenten. Der Effekt: Steuerberater und Entwickler prüfen deine Regeln öffentlich — kostenlose Fachkontrolle für genau den Teil, an dem du haftest —, du wirst zum Referenzformat, und Inbound ersetzt Anzeigen.
+
+### 9.3 High-Volume E-Commerce-GmbHs — Score 44,5 (aufgewertet von 39,5)
+
+**Verdikt: substanzielle Verbesserung gegenüber der breiten E-Commerce-Nische; jetzt gleichauf mit Handwerk/Bau.** Die Einschränkung auf bilanzierende GmbHs mit hohem Volumen verschiebt vier Kriterien:
+
+| Kriterium | vorher | jetzt | Grund |
+|---|:--:|:--:|---|
+| K2 ARPA | 4 | 5 | Bilanzierende GmbH: HGB-Abschluss, E-Bilanz, Offenlegung nach § 325 HGB. 500–1.500 €/Monat statt 150 €. |
+| K4 KI-Hebel | 2 | 3 | Der ursprüngliche Einwand galt nur der Verkaufsseite. Die Einkaufsseite ist Belegchaos. |
+| K8 Moat | 3 | 4 | Bestandsbewertung bindet den Kunden über den Bilanzstichtag hinaus. |
+| K1 Markt | 3 | 2 | Realistisch nur Größenordnung 8.000–15.000 Betriebe. |
+
+Zu K4: Dass die Daten strukturiert aus APIs kommen, gilt für Amazon, Shopify und Stripe — nicht für die Beschaffungsseite einer FBA-GmbH. Handelsrechnungen aus China, Zollbescheide und ATLAS-Belege, Einfuhrumsatzsteuer mit ihrem an vollständige Belege gebundenen Vorsteuerabzug, Frachtführer- und Zollagentenrechnungen, Reverse-Charge-Dienstleister aus Drittländern: Dort ist Papier, dort ist der Agent wertvoll.
+
+**Der Wedge ist der Abschluss, nicht die Umsatzsteuer.** Die USt-Ecke ist besetzt und im Preisverfall. Unbesetzt ist die Bestandsbewertung: Bestände in ausländischen Lagern müssen zum Stichtag korrekt erfasst und bewertet werden — Anschaffungskosten inklusive Einfuhrabgaben und Fracht, Niederstwertprinzip, Währungsumrechnung, verteilt über PAN-EU-Lager. Die USt-Anbieter hören genau davor auf.
+
+**Nebeneffekt:** Das löst die größte Schwäche der Gastro-Empfehlung. Dort ist die Marge je Beleg die kritische Größe; bei 1.000 €/Monat ARPA sind Inferenzkosten kein Engpass.
+
+**Bleibende Einwände:** Amazon-Abhängigkeit in Reporting und Regelwerk, das weitgehend verstrichene Taxdoo-Migrationsfenster (30.04.2026) und der Umstand, dass der Abschluss wieder Vorbehaltsaufgabe ist — die Kanzlei muss auch hier ins Konstrukt.
+
+### 9.4 Was alle drei verbindet
+
+Alle drei Ansätze laufen auf dieselbe Wand zu: Jahresabschluss, E-Bilanz und Steuererklärungen sind Vorbehaltsaufgaben. Bei der Spardosen-GmbH *ist* das die gesamte Wertschöpfung — deshalb ohne Zulassung nicht baubar. Bei den E-Commerce-GmbHs ist es der teuerste und klebrigste Teil — deshalb der richtige Wedge. Self-Hosted umgeht die Wand vollständig — und hat genau deshalb keine Umsätze.
+
+**Aktualisierte Empfehlung:** Gastronomie bleibt vorn, aber der Abstand ist geschrumpft. Der Entscheider zwischen Gastronomie und E-Commerce-GmbH ist kein Argument, sondern ein Anruf: Gewinnst du zuerst eine spezialisierte E-Commerce-Kanzlei als Design-Partner, nimm die E-Commerce-GmbHs. Gewinnst du zuerst einen Kassenhersteller, nimm Gastronomie. Beide Nischen scheitern ohne diesen Partner und funktionieren mit ihm.
+
+---
+
 ## Quellen
 
 - [Get Mika GmbH — Produkt und Positionierung](https://www.getmika.de/)
@@ -414,3 +473,12 @@ Ich empfehle für alle drei Nischen **Modell 2** — und zwar von Anfang an, wei
 - [countX: Taxdoo stellt Umsatzsteuer-Service ein](https://www.countx.com/eng/post/taxdoo-stellt-umsatzsteuer-service-ein)
 - [OMR Reviews: Taxdoo-Alternativen 2026](https://omr.com/de/reviews/contenthub/taxdoo-alternativen)
 - [SBZ: ToolTime integriert direkte DATEV-Schnittstelle](https://www.sbz-online.de/meldungen/handwerkersoftware-tooltime-integriert-direkte-datev-schnittstelle)
+- [Resolvio: Holding-Jahresabschluss zum Festpreis 389 €](https://resolvio.com/holding-jahresabschluss-guenstig)
+- [b'steuern: Vermögensverwaltende GmbH — Guide und Preise](https://www.bsteuern.com/blog/vermogensverwaltende-gmbh-guide)
+- [steueragenten.de: Steuerberater für die vermögensverwaltende GmbH](https://www.steueragenten.de/mandanten/steuerberater-vermoegensverwaltende-gmbh/)
+- [FELSFO: Holding-Verwaltung](https://felsfo.com/holding/verwalten/)
+- [§ 50a StBerG Kapitalbindung — Haufe](https://www.haufe.de/id/norm/steuerberatungsgesetz-50a-kapitalbindung-HI45153.html)
+- [GoBD-konforme Buchführung mit Odoo (IDW PS 880-Testat ab Version 18)](https://www.intero-technologies.de/blog/odoo-19/gobd-konforme-buchfuhrung-mit-odoo-was-unternehmen-wissen-sollten-672)
+- [Open-Source-ERP im Vergleich 2026](https://anexum.eu/blog/open-source-erp-vergleich/)
+- [OnlineBilanz: Buchführung Amazon FBA 2026](https://onlinebilanz.de/buchfuehrung-amazon-fba/)
+- [OnlineBilanz: Amazon FBA Steuerberater 2026 (Bestandsbewertung, Auslandslager)](https://onlinebilanz.de/amazon-fba-steuerberater/)
