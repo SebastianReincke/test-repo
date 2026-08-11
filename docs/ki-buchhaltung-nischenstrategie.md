@@ -454,6 +454,51 @@ Alle drei Ansätze laufen auf dieselbe Wand zu: Jahresabschluss, E-Bilanz und St
 
 ---
 
+## 10. Zwei Vorgänger: Zeitgold und SMACC
+
+Beide haben zwischen 2015 und 2020 genau das versucht, was hier vorgeschlagen wird. Ihre Fehlermodi sind unterschiedlich und beide instruktiv.
+
+### 10.1 Zeitgold — gescheitert an der versteckten Handarbeit
+
+Gegründet 2015 von Stefan Jeschonnek, Jan Deepen und Kobi Eldar (Jeschonnek und Deepen zuvor Mitgründer von SumUp), Berlin und Tel Aviv. Zielgruppe: kleine Ladengeschäfte, Restaurants, Handwerker. Insgesamt über 50 Mio. € Kapital, davon 27 Mio. € im Mai 2020. **Ende Juli 2020, zwei Monate nach dieser Runde, wurde das Produkt eingestellt und 75 von 120 Mitarbeitern entlassen.**
+
+**Das Modell war der Fehler.** Der Kunde legte Belege in eine Box, ein Kurier holte sie ab, Zeitgold digitalisierte und leitete an den Steuerberater weiter — eine Logistik- und Backoffice-Dienstleistung mit KI-Fassade. Die Selbstbegründung war offen: Man habe es nicht geschafft, eine Lösung anzubieten, ohne weiterhin beträchtliche Investitionen in manuelle Arbeit zu leisten; diese laufenden Investitionen machten das Produkt weder skalierbar noch wirtschaftlich tragfähig. Jeder Neukunde brachte menschliche Grenzkosten mit, die nicht schnell genug fielen.
+
+**Der zweite Mechanismus ist der wichtigere:** Schlechte Automatisierung kostet den Kunden mehr als gar keine. Business Insider dokumentiert eine Berliner Lebensmittelhändlerin, die statt 10.500 € Buchhaltungskosten mehr als das Doppelte aufwenden musste, weil Buchungen aus einem halben Jahr rückwirkend korrigiert werden mussten — bei gleichzeitig unzuverlässiger Kurierabholung. Das ist der Schwellenwert-Effekt aus Abschnitt 8 mit Preisschild: In einer empfehlungsgetriebenen Zielgruppe erzeugt das keine Abwanderung, sondern eine negative Vertriebsmaschine.
+
+Corona war Beschleuniger, nicht Ursache — die Zielgruppe musste lange schließen, dazu kamen Vertriebsprobleme. Danach Neustart als *Sorted* (Steuersoftware für Freiberufler) und im August 2021 Übernahme durch Deel; die Gesellschafter wurden Deel-Gesellschafter, der Kaufpreis ist unbekannt.
+
+### 10.2 SMACC — nicht an der Technik gescheitert, sondern am Segment
+
+Gegründet 2015 in Potsdam von Dr. Ulrich Erxleben, Janosch Novak und Stefan Korsch; 3,5 Mio. € Seed plus 1,75 Mio. € Forschungsgelder; Cloud-Lösung für Eingangsrechnungsverarbeitung im Mittelstand. **Kein Insolvenzfall.**
+
+Als SMACC Mitte 2018 seine KI-Software veröffentlichte, war die Resonanz unerwartet groß — vor allem aus Großunternehmen, deren Rückmeldung lautete, die Technik funktioniere besser als ihre eigenen Automatisierungssysteme, sie brauche nur SAP-Integration. Daraufhin gründeten Erxleben und Novak Ende 2018 **Hypatos** als Spin-out; Erxleben trat als SMACC-Geschäftsführer zurück, Novak übernahm SMACC allein. Hypatos sammelte später 10 Mio. € ein und existiert weiter.
+
+**Die Lehre ist unbequemer als die von Zeitgold:** Gute Belegverstehens-KI ist für Konzerne mehr wert als für Kleinbetriebe. Ein Enterprise-Kunde zahlt sechsstellig bei Millionen Dokumenten; ein Handwerksbetrieb zahlt 80 € bei 200 Belegen. Wer die Technik wirklich beherrscht, wird vom Markt nach oben gezogen. Taxdoos Pivot zu Real-Time-Accounting ist dasselbe Muster in neuerer Auflage.
+
+*(Der formale Endzustand der SMACC GmbH ließ sich nicht verifizieren — Handelsregisterdaten waren nicht abrufbar.)*
+
+### 10.3 Konsequenzen für diesen Plan
+
+Zeitgold hat exakt die hier empfohlene Nische bedient — kleine Läden und Restaurants — und dabei über 50 Mio. € verloren. Das ist ein direkter Einwand gegen Abschnitt 5 und gehört ausgesprochen. Vier Unterschiede sind substanziell:
+
+| Zeitgold 2015–2020 | Dieser Ansatz 2026 |
+|---|---|
+| Papierabholung per Kurier: Logistikkosten und sichtbare Ausfälle | API- und Foto-Erfassung; DSFinV-K existierte zu Zeitgolds Startzeit noch nicht |
+| Verkauft wurde Zeitersparnis | Verkauft wird Prüfungssicherheit — anderer Preisanker, anderer Kündigungsgrund |
+| Saß neben dem Steuerberater: trug die Schuld ohne den Prozess zu besitzen | Kanzleimodell mit Freigabe im Produkt (Abschnitt 6.7) |
+| Manuelle Arbeit als dauerhafter Posten | Autonomiestufen mit messbarer Hochstufung je Lieferant (Abschnitt 6.4) |
+
+Der ehrliche Gegeneinwand: Zeitgold hat ebenfalls geglaubt, die KI hole auf. Der Unterschied darf keine Überzeugung sein, sondern muss eine Messung sein — daher Kill-Kriterium 4 und der Eval-Harness aus Abschnitt 6.5.
+
+**Zusätzliche Kennzahl, die diesen Fehler früh sichtbar macht:**
+
+> **Manuelle Minuten je Mandant und Monat, aufgeschlüsselt nach Kohorten-Alter.** Fällt diese Kurve mit zunehmendem Mandantenalter nicht steil, ist das Unternehmen ein Dienstleister mit Softwarebewertung. Das ist die eine Zahl, die Zeitgolds Investoren vor der 27-Millionen-Runde hätten sehen müssen.
+
+**Gewichtung gegenüber Abschnitt 9:** Zeitgold ist der empirische Beleg für die Arithmetik der Resthandarbeit. Bei 149 €/Monat ist sie nicht finanzierbar, bei 1.000 €/Monat schon. Genau die Größe, an der Zeitgold gestorben ist, ist bei bilanzierenden E-Commerce-GmbHs tragbar und bei kleinen Gastronomiebetrieben nicht. Das kehrt die Empfehlung nicht um, verkleinert aber den Abstand zwischen Platz 1 und Platz 2 weiter.
+
+---
+
 ## Quellen
 
 - [Get Mika GmbH — Produkt und Positionierung](https://www.getmika.de/)
@@ -482,3 +527,11 @@ Alle drei Ansätze laufen auf dieselbe Wand zu: Jahresabschluss, E-Bilanz und St
 - [Open-Source-ERP im Vergleich 2026](https://anexum.eu/blog/open-source-erp-vergleich/)
 - [OnlineBilanz: Buchführung Amazon FBA 2026](https://onlinebilanz.de/buchfuehrung-amazon-fba/)
 - [OnlineBilanz: Amazon FBA Steuerberater 2026 (Bestandsbewertung, Auslandslager)](https://onlinebilanz.de/amazon-fba-steuerberater/)
+- [deutsche-startups: Zeitgold gibt auf — Neustart als Sorted](https://www.deutsche-startups.de/2020/07/31/zeitgold-offline-sorted/)
+- [t3n: Zeitgold stellt Produkt ein und entlässt 75 Mitarbeiter](https://t3n.de/news/kurz-geldsegen-zeitgold-stellt-1305883/)
+- [Business Insider: Zeitgold — was lief schief beim 50-Millionen-Fintech?](https://www.businessinsider.de/gruenderszene/fintech/zeitgold-fintech-kunden-rechnen-ab/)
+- [Business Insider: Ehemalige Kunden rechnen mit Zeitgold ab](https://www.businessinsider.de/wirtschaft/wie-damals-bei-air-berlin-ehemalige-kunden-rechnen-mit-millionen-fintech-zeitgold-ab/)
+- [Deel: Zeitgold is now part of Deel (August 2021)](https://www.deel.com/blog/deel-x-zeitgold/)
+- [Business Insider: Hypatos — Portrait des SMACC-Spin-outs](https://www.businessinsider.de/gruenderszene/technologie/portrait-startup-hypatos-ki/)
+- [Business Insider: 3,5 Mio. € für Smacc (Erxleben, Korsch, Novak)](https://www.businessinsider.de/gruenderszene/allgemein/smacc-erxleben-korsch-novak-cherry-rocket-dvh-finanzierung/)
+- [StartingUp: Hypatos erhält 10 Mio. €](https://www.starting-up.de/news/news-investments/deeptech-start-up-hypatos-erhaelt-10-mio-euro.html)
