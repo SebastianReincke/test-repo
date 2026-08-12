@@ -1,0 +1,861 @@
+<title>Nischendossier KI-Buchhaltung</title>
+<style>
+/* ============ Tokens: light (bare :root = complete palette) ============ */
+:root{
+  --paper:#F5F5F2;
+  --surface:#FFFFFF;
+  --surface-2:#ECECE7;
+  --ink:#191C20;
+  --ink-2:#4C525A;
+  --ink-3:#7B828B;
+  --rule:#D9DAD4;
+  --rule-hard:#B4B7AF;
+  --accent:#A32819;        /* Stempelrot */
+  --accent-ink:#A32819;
+  --accent-wash:#F4E3DF;
+  --navy:#25405C;
+  --navy-wash:#E2E8EF;
+  --good:#3D6A49;
+  --good-wash:#E1EBE3;
+  --mid:#836320;
+  --mid-wash:#EFE7D5;
+  --shadow:0 1px 0 rgba(25,28,32,.05);
+  --serif:'Iowan Old Style','Palatino Linotype',Palatino,'Book Antiqua','URW Palladio L',Georgia,serif;
+  --sans:ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;
+  --mono:ui-monospace,'SFMono-Regular','SF Mono',Menlo,Consolas,'Liberation Mono',monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#131519;
+    --surface:#191C21;
+    --surface-2:#22262C;
+    --ink:#E8E8E3;
+    --ink-2:#AAB0B7;
+    --ink-3:#7D848C;
+    --rule:#2B3037;
+    --rule-hard:#3E454D;
+    --accent:#E4735F;
+    --accent-ink:#E4735F;
+    --accent-wash:#3A211C;
+    --navy:#93B6DA;
+    --navy-wash:#1D2833;
+    --good:#7CB28D;
+    --good-wash:#1B2820;
+    --mid:#C9A552;
+    --mid-wash:#2C2617;
+    --shadow:0 1px 0 rgba(0,0,0,.3);
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#131519;
+  --surface:#191C21;
+  --surface-2:#22262C;
+  --ink:#E8E8E3;
+  --ink-2:#AAB0B7;
+  --ink-3:#7D848C;
+  --rule:#2B3037;
+  --rule-hard:#3E454D;
+  --accent:#E4735F;
+  --accent-ink:#E4735F;
+  --accent-wash:#3A211C;
+  --navy:#93B6DA;
+  --navy-wash:#1D2833;
+  --good:#7CB28D;
+  --good-wash:#1B2820;
+  --mid:#C9A552;
+  --mid-wash:#2C2617;
+  --shadow:0 1px 0 rgba(0,0,0,.3);
+}
+
+/* ============ Base ============ */
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:var(--paper);
+  color:var(--ink);
+  font-family:var(--sans);
+  font-size:16px;
+  line-height:1.62;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1120px;margin:0 auto;padding:0 28px 96px}
+@media (max-width:720px){.wrap{padding:0 18px 64px}}
+
+h1,h2,h3,h4{font-family:var(--serif);font-weight:600;text-wrap:balance;margin:0;letter-spacing:-.005em}
+p{margin:0}
+a{color:var(--accent-ink);text-decoration:none;border-bottom:1px solid color-mix(in srgb,var(--accent) 35%,transparent)}
+a:hover{border-bottom-color:var(--accent)}
+a:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+
+.eyebrow{
+  font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--ink-3);
+}
+.num{font-variant-numeric:tabular-nums}
+
+/* ============ Masthead ============ */
+.mast{
+  border-bottom:2px solid var(--ink);
+  padding:44px 0 20px;
+  display:flex;flex-direction:column;gap:18px;
+}
+.mast-top{display:flex;justify-content:space-between;align-items:baseline;gap:18px;flex-wrap:wrap}
+.mast h1{font-size:clamp(30px,4.6vw,50px);line-height:1.08}
+.mast .sub{font-size:17px;color:var(--ink-2);max-width:62ch}
+.meta{
+  display:flex;flex-wrap:wrap;gap:0;
+  border-top:1px solid var(--rule);
+  margin-top:6px;
+}
+.meta div{
+  flex:1 1 150px;padding:12px 16px 12px 0;border-right:1px solid var(--rule);
+}
+.meta div:last-child{border-right:0}
+.meta dt{font-family:var(--mono);font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink-3);margin:0 0 3px}
+.meta dd{margin:0;font-size:14px;color:var(--ink)}
+
+/* ============ Sections ============ */
+section{padding-top:56px}
+.sec-head{display:flex;gap:16px;align-items:baseline;border-bottom:1px solid var(--rule-hard);padding-bottom:10px;margin-bottom:24px}
+.sec-head .idx{font-family:var(--mono);font-size:12px;color:var(--accent-ink);letter-spacing:.08em;padding-top:4px}
+.sec-head h2{font-size:clamp(22px,2.6vw,29px);flex:1}
+.prose{max-width:68ch;display:flex;flex-direction:column;gap:16px}
+.prose h3{font-size:19px;margin-top:10px}
+.prose ul{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:8px}
+.prose li::marker{color:var(--ink-3)}
+strong{font-weight:650;color:var(--ink)}
+
+/* ============ Verdict block ============ */
+.verdict{
+  margin-top:34px;
+  border:1px solid var(--rule-hard);
+  background:var(--surface);
+  display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);
+}
+@media (max-width:820px){.verdict{grid-template-columns:1fr}}
+.verdict-main{padding:26px 28px;display:flex;flex-direction:column;gap:14px}
+.verdict-side{padding:26px 28px;border-left:1px solid var(--rule);background:var(--surface-2);display:flex;flex-direction:column;gap:14px}
+@media (max-width:820px){.verdict-side{border-left:0;border-top:1px solid var(--rule)}}
+.stamp{
+  display:inline-block;align-self:flex-start;
+  font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--accent-ink);border:1.5px solid var(--accent);padding:5px 11px;
+  transform:rotate(-1.2deg);
+}
+.verdict h2{font-size:27px}
+.verdict p{color:var(--ink-2);font-size:15.5px}
+.verdict .lead{color:var(--ink);font-size:16.5px}
+
+/* ============ Score table ============ */
+.tablewrap{overflow-x:auto;border:1px solid var(--rule-hard);background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:760px;font-size:14px}
+thead th{
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--ink-3);font-weight:500;text-align:center;
+  padding:12px 8px;border-bottom:1px solid var(--rule-hard);vertical-align:bottom;
+}
+thead th.l{text-align:left;padding-left:18px}
+tbody td{padding:11px 8px;border-bottom:1px solid var(--rule);text-align:center;font-variant-numeric:tabular-nums;color:var(--ink-2)}
+tbody td.l{text-align:left;padding-left:18px;color:var(--ink);font-weight:600}
+tbody tr:last-child td{border-bottom:0}
+tbody tr.top td{background:var(--surface-2)}
+tbody tr.dim td.l{font-weight:500;color:var(--ink-2)}
+.sc{display:inline-block;min-width:20px}
+.s5{color:var(--good);font-weight:700}
+.s4{color:var(--good)}
+.s3{color:var(--ink-2)}
+.s2{color:var(--mid)}
+.s1{color:var(--accent-ink)}
+.total{text-align:right;padding-right:18px !important;white-space:nowrap}
+.bar{display:inline-block;width:56px;height:7px;background:var(--surface-2);border:1px solid var(--rule);vertical-align:middle;margin-right:9px;position:relative}
+.bar i{position:absolute;inset:0 auto 0 0;background:var(--accent);display:block}
+.total b{font-variant-numeric:tabular-nums;color:var(--ink);font-size:14px}
+caption{caption-side:bottom;text-align:left;padding:12px 18px;font-size:12.5px;color:var(--ink-3);border-top:1px solid var(--rule)}
+
+/* ============ Criteria grid ============ */
+.crit{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:0;border:1px solid var(--rule-hard);margin-top:8px;background:var(--surface)}
+.crit div{padding:16px 18px;border-right:1px solid var(--rule);border-bottom:1px solid var(--rule)}
+.crit div h4{font-family:var(--sans);font-size:14px;font-weight:650;margin-bottom:4px}
+.crit div p{font-size:13px;color:var(--ink-2);line-height:1.5}
+.crit .w{font-family:var(--mono);font-size:11px;color:var(--accent-ink);letter-spacing:.06em;display:block;margin-bottom:6px}
+.crit .hi{background:var(--accent-wash)}
+
+/* ============ Dossier / SWOT ============ */
+.dossier{margin-top:40px;border:1px solid var(--rule-hard);background:var(--surface)}
+.dossier-head{padding:22px 26px;border-bottom:1px solid var(--rule-hard);display:flex;flex-wrap:wrap;gap:14px;align-items:baseline;justify-content:space-between}
+.dossier-head h3{font-size:24px}
+.dossier-head .tag{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3)}
+.dossier-body{padding:24px 26px;display:flex;flex-direction:column;gap:18px}
+.dossier-body p,.dossier-body li{font-size:15px;color:var(--ink-2)}
+.dossier-body .lede{color:var(--ink);font-size:15.5px}
+.dossier-body ul{margin:0;padding-left:19px;display:flex;flex-direction:column;gap:7px}
+.killer{border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);padding:18px 0;display:flex;flex-direction:column;gap:8px}
+.killer .eyebrow{color:var(--accent-ink)}
+.killer p{color:var(--ink)}
+
+.swot{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid var(--rule-hard)}
+@media (max-width:760px){.swot{grid-template-columns:1fr}}
+.q{padding:20px 26px;border-right:1px solid var(--rule);border-bottom:1px solid var(--rule);display:flex;flex-direction:column;gap:10px}
+.q:nth-child(2n){border-right:0}
+@media (max-width:760px){.q{border-right:0}}
+.q h4{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-weight:500;display:flex;align-items:center;gap:9px}
+.q h4 span{display:inline-flex;width:19px;height:19px;align-items:center;justify-content:center;font-size:11px;border:1px solid currentColor}
+.q ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:8px;font-size:14.2px;line-height:1.55}
+.q-s h4{color:var(--good)} .q-s{background:linear-gradient(var(--good-wash),var(--good-wash)) no-repeat 0 0/100% 3px}
+.q-w h4{color:var(--accent-ink)} .q-w{background:linear-gradient(var(--accent-wash),var(--accent-wash)) no-repeat 0 0/100% 3px}
+.q-o h4{color:var(--navy)} .q-o{background:linear-gradient(var(--navy-wash),var(--navy-wash)) no-repeat 0 0/100% 3px}
+.q-r h4{color:var(--mid)} .q-r{background:linear-gradient(var(--mid-wash),var(--mid-wash)) no-repeat 0 0/100% 3px}
+
+/* ============ Architecture stack ============ */
+.stack{display:flex;flex-direction:column;gap:0;border:1px solid var(--rule-hard);background:var(--surface);margin-top:8px}
+.layer{display:grid;grid-template-columns:150px 1fr;border-bottom:1px solid var(--rule)}
+.layer:last-child{border-bottom:0}
+@media (max-width:700px){.layer{grid-template-columns:1fr}}
+.layer-l{padding:18px;border-right:1px solid var(--rule);background:var(--surface-2);display:flex;flex-direction:column;gap:3px}
+@media (max-width:700px){.layer-l{border-right:0;border-bottom:1px solid var(--rule);flex-direction:row;align-items:baseline;gap:10px}}
+.layer-l .n{font-family:var(--mono);font-size:11px;color:var(--accent-ink);letter-spacing:.1em}
+.layer-l .t{font-family:var(--serif);font-size:17px;color:var(--ink)}
+.layer-r{padding:18px;display:flex;flex-wrap:wrap;gap:8px;align-items:flex-start}
+.chip{
+  font-size:13px;padding:6px 11px;border:1px solid var(--rule-hard);color:var(--ink-2);
+  background:var(--paper);line-height:1.35;
+}
+.chip.det{border-style:dashed}
+.chip.llm{border-color:color-mix(in srgb,var(--accent) 45%,var(--rule-hard));color:var(--ink);background:var(--accent-wash)}
+.legend{display:flex;gap:20px;flex-wrap:wrap;margin-top:12px;font-size:12.5px;color:var(--ink-3)}
+.legend span{display:inline-flex;align-items:center;gap:8px}
+.legend i{width:22px;height:12px;border:1px solid var(--rule-hard);display:inline-block}
+.legend i.llm{border-color:color-mix(in srgb,var(--accent) 45%,var(--rule-hard));background:var(--accent-wash)}
+.legend i.det{border-style:dashed;background:var(--paper)}
+
+.rule-quote{
+  border-left:3px solid var(--accent);padding:14px 0 14px 20px;margin:8px 0;
+  font-family:var(--serif);font-size:19px;line-height:1.45;color:var(--ink);max-width:60ch;
+}
+
+/* ============ Steps / roadmap ============ */
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));border:1px solid var(--rule-hard);background:var(--surface);margin-top:8px}
+.steps > div{padding:18px;border-right:1px solid var(--rule);display:flex;flex-direction:column;gap:7px}
+.steps > div:last-child{border-right:0}
+.steps .when{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent-ink)}
+.steps h4{font-family:var(--sans);font-size:14.5px;font-weight:650}
+.steps p{font-size:13.5px;color:var(--ink-2);line-height:1.5}
+
+/* ============ Checklist ============ */
+.checks{display:flex;flex-direction:column;border:1px solid var(--rule-hard);background:var(--surface);margin-top:8px}
+.checks > div{display:grid;grid-template-columns:34px 1fr;gap:14px;padding:16px 18px;border-bottom:1px solid var(--rule)}
+.checks > div:last-child{border-bottom:0}
+.checks .k{font-family:var(--mono);font-size:12px;color:var(--accent-ink);padding-top:2px}
+.checks p{font-size:14.5px;color:var(--ink-2)}
+.checks b{color:var(--ink)}
+
+/* ============ Sources ============ */
+.src{columns:2;column-gap:34px;font-size:13.5px;line-height:1.6;color:var(--ink-2);margin-top:8px}
+@media (max-width:700px){.src{columns:1}}
+.src li{break-inside:avoid;margin-bottom:8px}
+footer{margin-top:64px;border-top:1px solid var(--rule);padding-top:18px;font-size:12.5px;color:var(--ink-3);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+</style>
+
+<div class="wrap">
+
+<header class="mast">
+  <div class="mast-top">
+    <span class="eyebrow">Strategiedossier · KI-Buchhaltung</span>
+    <span class="eyebrow num">Stand August 2026</span>
+  </div>
+  <h1>Welche Nische trägt eine KI-Buchhaltung?</h1>
+  <p class="sub">Acht Nischen im gewichteten Vergleich, drei ungeschönte SWOT-Analysen und der Architekturentwurf des Agentensystems dahinter — als Gegenentwurf zum branchenneutralen Ansatz von mika.</p>
+  <dl class="meta">
+    <div><dt>Betrachtete Nischen</dt><dd class="num">11 · davon 3 im Deep Dive</dd></div>
+    <div><dt>Empfehlung</dt><dd>Gastronomie &amp; Food-Service</dd></div>
+    <div><dt>Kritischer Faktor</dt><dd>Kosten je Beleg</dd></div>
+    <div><dt>Zeitfenster</dt><dd class="num">E-Rechnung 2027 / 2028</dd></div>
+  </dl>
+</header>
+
+<div class="verdict">
+  <div class="verdict-main">
+    <span class="stamp">Empfehlung</span>
+    <h2>Gastronomie &amp; Food-Service</h2>
+    <p class="lead">Es ist die einzige Nische, in der dir der Gesetzgeber drei Dinge gleichzeitig schenkt: eine standardisierte Datenschnittstelle zum Kernprozess des Kunden (DSFinV-K), einen existenziellen Kaufanlass (Kassen-Nachschau mit Hinzuschätzungsrisiko) und einen konzentrierten Vertriebskanal (Kassenhersteller). Und es ist die Nische, in der dein eigentlicher Vorteil — unstrukturierte Belege verstehen — den größten messbaren Unterschied macht.</p>
+  </div>
+  <div class="verdict-side">
+    <span class="eyebrow">Die Gegenrechnung</span>
+    <p>Du verkaufst an eine wirtschaftlich angeschlagene Branche: In der DEHOGA-Umfrage vom Februar 2026 bewerteten nur <strong>19,3 %</strong> der Betriebe ihre Lage als gut. Hoher Churn, niedriger ARPA, hohes Belegvolumen.</p>
+    <p>Das Modell trägt nur, wenn deine Grenzkosten je Beleg im niedrigen Cent-Bereich liegen und der Vertrieb über Partner läuft. Beides ist Konstruktionsvorgabe ab Tag eins — keine spätere Optimierung.</p>
+  </div>
+</div>
+
+<!-- 1 -->
+<section id="warum">
+  <div class="sec-head"><span class="idx">01</span><h2>Warum überhaupt eine Nische</h2></div>
+  <div class="prose">
+    <p>mika (Get Mika GmbH, Berlin) zielt branchenneutral auf Gründer und kleine Unternehmen — bis rund 50 Mitarbeiter und 10 Mio. € Umsatz, Einstieg ab 49 €/Monat, mit Jahresabschluss ab 99 €/Monat. Horizontal konkurrierst du gegen DATEV als Kanzleistandard, gegen lexoffice, sevdesk und Buchhaltungsbutler mit ihrem Preisanker bei 15–40 € und gegen die KI-nativen Neugründungen gleichzeitig. Drei Fronten, keine davon gewinnst du mit einem besseren Agenten.</p>
+    <p>Eine Branche mit eigener Steuerlogik verschiebt den Wettbewerb von „Wer hat mehr Features?“ zu „Wer versteht § 13b?“. Das bringt vier Dinge, die horizontal nicht kaufbar sind:</p>
+    <ul>
+      <li><strong>Ein engeres Ontologie-Problem.</strong> Ein Generalist muss jeden denkbaren Geschäftsvorfall kontieren. Ein Gastro-Agent muss rund 300 wiederkehrende Vorfälle sehr gut können. Das ist der Unterschied zwischen 85 % und 97 % Automatisierungsquote — und dort liegt die Marge.</li>
+      <li><strong>Einen Compliance-Burggraben.</strong> Kassenrecht, Bauabzugsteuer, OSS — Arbeit, die ein Generalist nie priorisiert, weil sie für 95 % seiner Kunden irrelevant ist.</li>
+      <li><strong>Bezahlbare Kundengewinnung.</strong> Verbände, Innungen, Großhändler, Kassenhersteller und spezialisierte Kanzleien sind Multiplikatoren mit Vertrauensvorschuss. Horizontal bleibt dir Google Ads gegen Konzernbudgets.</li>
+      <li><strong>Höhere Preise.</strong> Buchhaltung ist Commodity und kostet 30 €. „Ich überlebe die Kassennachschau“ ist Risikoabsicherung und kostet 200 €.</li>
+    </ul>
+    <h3>Rückenwind, den du nicht selbst erzeugen musst</h3>
+    <p>Die Empfangspflicht für E-Rechnungen gilt seit dem 1.1.2025 für alle inländischen Unternehmen. Die Ausstellungspflicht greift ab dem 1.1.2027 für Unternehmen mit über 800.000 € Vorjahresumsatz und ab dem 1.1.2028 für alle inländischen B2B-Umsätze. In genau deinem Gründungsfenster muss also jeder Betrieb in Deutschland seine Rechnungsprozesse anfassen — das größte erzwungene Wechselfenster im deutschen Mittelstand seit SEPA.</p>
+  </div>
+</section>
+
+<!-- 2 -->
+<section id="raster">
+  <div class="sec-head"><span class="idx">02</span><h2>Bewertungsraster</h2></div>
+  <div class="prose">
+    <p>Acht Kriterien, gewichtet nach ihrer Aussagekraft für ein KI-natives Produkt eines kleinen Teams. Skala 1–5.</p>
+  </div>
+  <div class="crit">
+    <div><span class="w">Gewicht 1,0</span><h4>K1 · Marktgröße</h4><p>Fast jede Nische trägt 20 Mio. € ARR. Selten der Engpass.</p></div>
+    <div><span class="w">Gewicht 1,5</span><h4>K2 · Zahlungsbereitschaft</h4><p>Entscheidet, ob du Vertrieb mit Menschen finanzieren kannst.</p></div>
+    <div><span class="w">Gewicht 1,5</span><h4>K3 · Schmerzintensität</h4><p>Existenzangst verkauft. Bequemlichkeit nicht.</p></div>
+    <div class="hi"><span class="w">Gewicht 2,0</span><h4>K4 · KI-Hebel</h4><p>Anteil unstrukturierter Arbeit, den ein Agent wirklich übernimmt. Dein einziger echter Produktvorteil.</p></div>
+    <div><span class="w">Gewicht 1,5</span><h4>K5 · Datenzugang</h4><p>Pflichtformate und APIs sind geschenkte Infrastruktur.</p></div>
+    <div><span class="w">Gewicht 1,5</span><h4>K6 · Wettbewerbslücke</h4><p>Wie besetzt ist die Kategorie bereits?</p></div>
+    <div><span class="w">Gewicht 1,0</span><h4>K7 · GTM-Zugang</h4><p>Existieren Multiplikatoren, oder zahlst du jede Akquise einzeln?</p></div>
+    <div><span class="w">Gewicht 1,0</span><h4>K8 · Verteidigbarkeit</h4><p>Was hält den Nachahmer auf, wenn er es sieht?</p></div>
+  </div>
+  <div class="prose" style="margin-top:24px">
+    <h3>Der meistübersehene Punkt ist K4</h3>
+    <p>Die intuitive Antwort auf „Wo lohnt sich KI-Buchhaltung?“ lautet „Da, wo die Daten sauber sind“. Das ist falsch herum gedacht. Wo die Daten sauber sind, reicht eine Regelmaschine — und du konkurrierst gegen bestehende Integrationen. Der KI-Hebel ist maximal, wo täglich Papier, PDFs mit 200 Positionen, Fotos vom Lieferschein und Bargeld anfallen. Also genau dort, wo Software die letzten zwanzig Jahre einen Bogen gemacht hat.</p>
+  </div>
+</section>
+
+<!-- 3 -->
+<section id="scorecard">
+  <div class="sec-head"><span class="idx">03</span><h2>Nischenvergleich</h2></div>
+  <div class="tablewrap">
+    <table>
+      <caption>Gewichteter Score, Maximum 55 Punkte. Farbcodierung der Einzelwerte: grün = Stärke, ocker/rot = Schwachstelle. <sup>†</sup> = nachträglich geprüfter Ansatz, siehe Abschnitt 09.</caption>
+      <thead>
+        <tr>
+          <th class="l">Nische</th>
+          <th>K1<br>Markt</th><th>K2<br>ARPA</th><th>K3<br>Schmerz</th><th>K4<br>KI-Hebel</th>
+          <th>K5<br>Daten</th><th>K6<br>Lücke</th><th>K7<br>GTM</th><th>K8<br>Moat</th>
+          <th style="text-align:right;padding-right:18px">Score</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="top"><td class="l">Gastronomie &amp; Food-Service</td>
+          <td class="s4">4</td><td class="s3">3</td><td class="s5">5</td><td class="s5">5</td><td class="s5">5</td><td class="s4">4</td><td class="s4">4</td><td class="s4">4</td>
+          <td class="total"><span class="bar"><i style="width:86%"></i></span><b>47,5</b></td></tr>
+        <tr class="top"><td class="l">Handwerk &amp; Bau-Nebengewerbe</td>
+          <td class="s5">5</td><td class="s4">4</td><td class="s4">4</td><td class="s5">5</td><td class="s3">3</td><td class="s4">4</td><td class="s3">3</td><td class="s4">4</td>
+          <td class="total"><span class="bar"><i style="width:81%"></i></span><b>44,5</b></td></tr>
+        <tr class="top"><td class="l">E-Commerce-GmbH, hohes Volumen <sup>†</sup></td>
+          <td class="s2">2</td><td class="s5">5</td><td class="s5">5</td><td class="s3">3</td><td class="s5">5</td><td class="s4">4</td><td class="s4">4</td><td class="s4">4</td>
+          <td class="total"><span class="bar"><i style="width:81%"></i></span><b>44,5</b></td></tr>
+        <tr><td class="l">E-Commerce / Marktplatzhändler (breit)</td>
+          <td class="s3">3</td><td class="s4">4</td><td class="s5">5</td><td class="s2">2</td><td class="s5">5</td><td class="s3">3</td><td class="s4">4</td><td class="s3">3</td>
+          <td class="total"><span class="bar"><i style="width:72%"></i></span><b>39,5</b></td></tr>
+        <tr><td class="l">Transport, Kurier &amp; Sub-Spedition</td>
+          <td class="s3">3</td><td class="s3">3</td><td class="s4">4</td><td class="s4">4</td><td class="s4">4</td><td class="s4">4</td><td class="s3">3</td><td class="s3">3</td>
+          <td class="total"><span class="bar"><i style="width:72%"></i></span><b>39,5</b></td></tr>
+        <tr class="dim"><td class="l">Heilberufe &amp; Praxen</td>
+          <td class="s3">3</td><td class="s5">5</td><td class="s3">3</td><td class="s3">3</td><td class="s3">3</td><td class="s3">3</td><td class="s3">3</td><td class="s3">3</td>
+          <td class="total"><span class="bar"><i style="width:65%"></i></span><b>36,0</b></td></tr>
+        <tr class="dim"><td class="l">Vermieter &amp; kleine WEG-Verwaltung</td>
+          <td class="s4">4</td><td class="s2">2</td><td class="s3">3</td><td class="s4">4</td><td class="s3">3</td><td class="s3">3</td><td class="s3">3</td><td class="s3">3</td>
+          <td class="total"><span class="bar"><i style="width:63%"></i></span><b>34,5</b></td></tr>
+        <tr class="dim"><td class="l">Vereine &amp; gemeinnützige Organisationen</td>
+          <td class="s4">4</td><td class="s1">1</td><td class="s4">4</td><td class="s4">4</td><td class="s2">2</td><td class="s5">5</td><td class="s2">2</td><td class="s2">2</td>
+          <td class="total"><span class="bar"><i style="width:62%"></i></span><b>34,0</b></td></tr>
+        <tr class="dim"><td class="l">Vermögensverwaltende Holdings <sup>†</sup></td>
+          <td class="s2">2</td><td class="s4">4</td><td class="s3">3</td><td class="s1">1</td><td class="s3">3</td><td class="s3">3</td><td class="s4">4</td><td class="s3">3</td>
+          <td class="total"><span class="bar"><i style="width:55%"></i></span><b>30,5</b></td></tr>
+        <tr class="dim"><td class="l">Agenturen &amp; Professional Services</td>
+          <td class="s3">3</td><td class="s3">3</td><td class="s2">2</td><td class="s3">3</td><td class="s4">4</td><td class="s1">1</td><td class="s3">3</td><td class="s1">1</td>
+          <td class="total"><span class="bar"><i style="width:51%"></i></span><b>28,0</b></td></tr>
+        <tr class="dim"><td class="l">Self-Hosted / Open Source <sup>†</sup></td>
+          <td class="s2">2</td><td class="s1">1</td><td class="s2">2</td><td class="s3">3</td><td class="s2">2</td><td class="s4">4</td><td class="s3">3</td><td class="s1">1</td>
+          <td class="total"><span class="bar"><i style="width:46%"></i></span><b>25,5</b></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="prose" style="margin-top:28px">
+    <h3>Warum die unteren vier ausscheiden</h3>
+    <ul>
+      <li><strong>Agenturen &amp; Beratung — nicht machen.</strong> Exakt mikas Zielgruppe und die von lexoffice/sevdesk. Buchhalterisch langweilig: Dienstleistung, 19 %, gelegentlich Reverse Charge. Keine branchenspezifische Steuerlogik, kein Burggraben. Du wärst „mika, aber für Agenturen“ — eine Positionierung ohne Substanz.</li>
+      <li><strong>Vereine — schöner Schmerz, kein Geschäft.</strong> Die Sphärenrechnung ist fachlich anspruchsvoll und sträflich unterversorgt, daher K6 = 5. Aber der Käufer ist ein ehrenamtlicher Kassenwart ohne Budget und ohne Beschaffungsmandat. 5–15 €/Monat tragen keinen Vertrieb.</li>
+      <li><strong>Heilberufe — höchster ARPA, falscher Schmerz.</strong> Praxen zahlen bereitwillig, aber ihr Schmerz liegt in der Abrechnung (GOÄ/KV/PVS), nicht in der Buchhaltung. Buchhalterisch sind sie eher einfach: überwiegend nach § 4 Nr. 14 UStG steuerfreie Umsätze, EÜR, wenig Vorsteuer.</li>
+      <li><strong>Vermietung &amp; WEG — angrenzendes Produkt.</strong> Realer Schmerz, aber besetzt von Verwalter-Software (casavi, Objego, Vermietet.de), und private Vermieter zahlen 5–20 €/Monat.</li>
+    </ul>
+    <p><strong>Der unterschätzte Außenseiter:</strong> Transport &amp; Sub-Spedition liegt gleichauf mit E-Commerce und ist unterrecherchiert — Gutschriftsverfahren mit Frachtführern, Maut- und Tankkarten-CSVs, Fahrer-Lohnthemen, Nachunternehmerhaftung, viel Kleinstunternehmertum. Bei persönlichem Zugang zur Branche gehört sie in die Shortlist.</p>
+  </div>
+</section>
+
+<!-- 4 -->
+<section id="deepdive">
+  <div class="sec-head"><span class="idx">04</span><h2>Die drei Finalisten im Detail</h2></div>
+  <div class="prose"><p>Jeweils: konkrete Produktdefinition statt Kategorielabel, das eine Feature, das dich unkopierbar macht, und eine ungeschönte SWOT.</p></div>
+
+  <!-- A -->
+  <article class="dossier">
+    <div class="dossier-head">
+      <h3>A · Gastronomie &amp; Food-Service</h3>
+      <span class="tag">Arbeitstitel „Tresen“ · Score 47,5</span>
+    </div>
+    <div class="dossier-body">
+      <p class="lede">Der eigentliche Schmerz ist nicht Buchhaltung, sondern Prüfungsangst. Bei einer Kassen-Nachschau nach § 146b AO erscheint das Finanzamt unangekündigt, macht Testkäufe, verlangt den DSFinV-K-Export und zählt die Kasse. Formelle Mängel führen zur Hinzuschätzung — existenzbedrohend, weil sie auf Annahmen beruht, gegen die man schwer argumentiert. Dazu Bußgelder bis 25.000 €. Kein Gastronom liegt wegen seiner Kontierung wach. Wegen der Prüfung schon.</p>
+      <p><strong>Was das Produkt tut:</strong> täglich den DSFinV-K-Export (Version 2.5) aus dem Kassensystem ziehen und in Buchungen überführen · Kartenumsätze gegen PSP-Auszahlungen abgleichen, inklusive Gebühren, Trinkgeld, Gutscheinverkauf gegen -einlösung und zeitversetzter Lieferdienst-Provisionen · Lieferantenrechnungen mit 100–300 Positionen lesen und den <strong>7 %/19 %-Split je Position</strong> vornehmen statt je Rechnung · das digitale Kassenbuch mit Bestandsplausibilisierung führen · Eigenverbrauch, Personalverpflegung und Sachbezugswerte automatisch ansetzen · UStVA vorbereiten, Verfahrensdokumentation fortschreiben, DATEV-fertig an die Kanzlei übergeben.</p>
+      <div class="killer">
+        <span class="eyebrow">Das unkopierbare Feature</span>
+        <p><strong>Die Betriebsprüfungs-Simulation.</strong> Der Agent lässt monatlich genau die Routinen gegen die eigenen Daten laufen, die ein Prüfer anwenden würde — Zeitreihenvergleich, Chi-Quadrat-Test, Benford-Analyse der Tageseinnahmen, negative Kassenbestände, Storno- und Trainingskellner-Quoten, Lücken in der Belegnummernfolge — und liefert einen Prüfungsbereitschafts-Score mit konkreter Mängelliste und Fristen. Das verwandelt ein unsichtbares Risiko in eine abarbeitbare Liste. Und der Score im kostenlosen Erst-Check ist gleichzeitig der beste Lead-Magnet, den die Nische hergibt.</p>
+      </div>
+    </div>
+    <div class="swot">
+      <div class="q q-s"><h4><span>S</span>Stärken</h4><ul>
+        <li><strong>Gesetzlich erzwungene, maschinenlesbare Datenquelle.</strong> DSFinV-K ist der einzige Fall im deutschen KMU-Markt, in dem der Staat dir eine standardisierte Schnittstelle zum Kernprozess des Kunden vorschreibt. Geschenkt, wofür man anderswo 20 Integrationen baut.</li>
+        <li><strong>Der KI-Hebel ist beweisbar.</strong> Die Positionssplittung einer 240-zeiligen Metro-Rechnung ist Arbeit, die heute manuell erledigt oder — häufiger — pauschal falsch geschätzt wird. Der Wertbeweis passiert in der ersten Demo-Minute.</li>
+        <li>Verkauft wird Risikoabsicherung, nicht Zeitersparnis. Damit umgehst du den Preisanker „sevdesk kostet 20 €“.</li>
+        <li>Konzentrierte Kanäle mit Vertrauensvorschuss: Kassenhersteller, Großhändler, DEHOGA-Landesverbände, Gastro-Kanzleien.</li>
+        <li>Tägliche Belegfrequenz: Das Mandanten-Gedächtnis ist nach acht Wochen besser als bei einem Agenturkunden nach zwei Jahren.</li>
+      </ul></div>
+      <div class="q q-w"><h4><span>W</span>Schwächen</h4><ul>
+        <li><strong>Du verkaufst an eine notleidende Branche.</strong> Nur 19,3 % bewerten ihre Lage als gut. Insolvenz- und Aufgabequoten erzeugen Churn, den kein Produkt verhindert — kalkuliere mit 2,5–4 % monatlichem Logo-Churn.</li>
+        <li><strong>Niedriger ARPA bei höchstem Belegvolumen.</strong> Die teuerste Nische bei der zweitniedrigsten Zahlungsbereitschaft. Die Marge steht und fällt mit den Inferenzkosten je Beleg — eine harte Engineering-Anforderung, kein Detail.</li>
+        <li><strong>Fragmentierte Kassenlandschaft.</strong> Der Export ist gesetzlich standardisiert — der <em>Zugriff darauf</em> nicht. Dutzende Systeme, viele nur über Händlerzugänge erreichbar.</li>
+        <li>Bargeld bleibt teils unauflösbar. Wo der Betrieb bewusst nicht alles erfasst, kann der Agent nur melden. Ein Teil der Zielgruppe <em>will</em> diese Transparenz nicht — ein realer, selten ausgesprochener Marktanteilsverlust.</li>
+        <li>Saisonalität und Mehrstandort-Strukturen verkomplizieren Preismodell und Cashflow.</li>
+      </ul></div>
+      <div class="q q-o"><h4><span>O</span>Chancen</h4><ul>
+        <li><strong>Kassenhersteller als Distribution statt als Vertriebskosten.</strong> Sie haben die Installationsbasis, aber kein Interesse, Steuerrecht zu bauen. White-Label oder Revenue-Share kann die CAC halbieren.</li>
+        <li>Der Prüfungsdruck steigt weiter — Meldepflicht, DSFinV-K 2.5, verschärfte Nachschau-Praxis. Nachfrage wächst ohne dein Zutun.</li>
+        <li><strong>Die Kanzlei als Kunde.</strong> Gastro-Mandate gelten in Kanzleien als unbeliebt. Ein Werkzeug fürs Vorkontieren verkauft sich an eine spezialisierte Kanzlei mit 30 Mandaten — ein Abschluss, dreißig Betriebe.</li>
+        <li>Controlling auf derselben Datenbasis: Wareneinsatzquote je Warengruppe, Deckungsbeitrag je Gericht, Lieferantenpreis-Benchmarking. Rechtfertigt einen zweiten Preisplan.</li>
+        <li>Kleine Ketten und Franchise heben den ARPA um eine Größenordnung bei fast identischem Produkt.</li>
+      </ul></div>
+      <div class="q q-r"><h4><span>R</span>Risiken</h4><ul>
+        <li><strong>Der Kassenhersteller baut es selbst.</strong> Er sitzt näher an den Daten. Gegenmittel: Steuerlogik und Kanzleibeziehung sind der Teil, den er nicht will — konzentriere dich darauf und werde zum Zukauf, nicht zum Wettbewerber.</li>
+        <li><strong>Haftung.</strong> Wenn dein Score „grün“ sagt und die Prüfung mit sechsstelliger Hinzuschätzung endet, hast du ein Problem — juristisch, spätestens im Marktvertrauen. Der Score muss Selbstdiagnose ohne Zusicherung sein, mit Kanzleifreigabe überall dort, wo eine steuerliche Aussage entsteht.</li>
+        <li><strong>Berufsrecht.</strong> § 6 Nr. 4 StBerG erlaubt das Buchen laufender Geschäftsvorfälle nur unter Qualifikationsauflagen; Kontieren und Buchungsanweisungen zählen ausdrücklich nicht zur erlaubten mechanischen Tätigkeit, die UStVA ebenso wenig. Siehe Abschnitt 06.</li>
+        <li>Kanalkonzentration: Hängst du an einem Kassenhersteller, bist du dessen Verhandlungsmasse.</li>
+      </ul></div>
+    </div>
+  </article>
+
+  <!-- B -->
+  <article class="dossier">
+    <div class="dossier-head">
+      <h3>B · Handwerk &amp; Bau-Nebengewerbe</h3>
+      <span class="tag">Arbeitstitel „Polier“ · Score 44,5</span>
+    </div>
+    <div class="dossier-body">
+      <p class="lede">1.038.126 Betriebe zum Jahresende 2025, rund 6 Mio. Beschäftigte, 783,2 Mrd. € Umsatz. Die mit Abstand größte Nische der Liste — und die am wenigsten digitalisierte. Steuerlich zugleich die komplexeste Kleinbetriebs-Branche Deutschlands: Reverse Charge bei Bauleistungen nach § 13b UStG, Abschlags- und Schlussrechnungen mit korrekter Umsatzsteuerabgrenzung, Bauabzugsteuer nach § 48 EStG, Nachunternehmerhaftung für Sozialabgaben und Mindestlohn. Operativ: Materialbelege auf dem Beifahrersitz, Sammelrechnungen mit Lieferscheinbezug, jede Kostenposition gehört auf eine Baustelle.</p>
+      <p><strong>Was das Produkt tut:</strong> Materialbelege und Großhandels-Sammelrechnungen lesen und auf Baustellen verteilen, auch aus abfotografierten Lieferscheinen · § 13b automatisch erkennen <em>und begründen</em> statt es als Checkbox hinzuwerfen · Abschlagsrechnungen fortschreiben und bei der Schlussrechnung die kumulierten Abschläge samt Umsatzsteuer sauber auflösen · § 48 EStG durchsetzen · E-Rechnungs-Readiness für 2027/28 herstellen · als Nebenprodukt die Nachkalkulation je Baustelle liefern.</p>
+      <div class="killer">
+        <span class="eyebrow">Das unkopierbare Feature</span>
+        <p><strong>Der Subunternehmer-Wächter.</strong> Ein Agent, der für jeden Nachunternehmer permanent den Haftungsstatus führt: Freistellungsbescheinigung nach § 48b EStG (gültig? läuft ab?), Unbedenklichkeitsbescheinigungen, Anzeichen für Scheinselbstständigkeit, Mindestlohn-Nachweise nach § 13 MiLoG, Generalunternehmerhaftung nach § 28e SGB IV. Vor jeder Zahlungsfreigabe eine Ampel. Das ist kein Buchhaltungsfeature, sondern eine Versicherung gegen fünf- bis sechsstellige Nachforderungen — und es adressiert den Inhaber, nicht die Bürokraft.</p>
+      </div>
+    </div>
+    <div class="swot">
+      <div class="q q-s"><h4><span>S</span>Stärken</h4><ul>
+        <li>Größter Markt der Shortlist bei höchster Regulierungsdichte — die Kombination, in der Spezialisierung am meisten wert ist.</li>
+        <li><strong>Maximaler KI-Hebel</strong>, weil der Input maximal unstrukturiert ist: Fotos, Lieferscheine, handschriftliche Notizen, Sammelrechnungen. Genau das, woran klassische Software seit 20 Jahren scheitert.</li>
+        <li>§ 13b, § 48 EStG und die Abschlagsrechnungs-Systematik korrekt zu implementieren kostet Monate Fachaufwand. Ein Generalist wird das nie priorisieren.</li>
+        <li>Hohe Zahlungsbereitschaft beim Inhaber — wenn als Haftungsschutz und Nachkalkulation verkauft, nicht als Buchhaltung.</li>
+        <li><strong>Bestehende Handwerkersoftware ist Verbündeter, nicht Gegner.</strong> ToolTime etwa hat eine DATEV-zertifizierte Schnittstelle gebaut — das zeigt das Muster: Diese Anbieter liefern Rechnungsdaten ab, sie machen keine Buchhaltung. Zwischen ihnen und DATEV klafft deine Lücke.</li>
+      </ul></div>
+      <div class="q q-w"><h4><span>W</span>Schwächen</h4><ul>
+        <li><strong>Kein Pflichtformat, keine geschenkten Daten.</strong> Kein DSFinV-K-Äquivalent. Du baust jede Datenquelle einzeln, bis die E-Rechnungspflicht greift.</li>
+        <li><strong>Der härteste Vertrieb der Liste.</strong> Der Entscheider ist auf der Baustelle, liest keine E-Mails, kauft über Empfehlung. Produktgetriebenes Wachstum funktioniert praktisch nicht — du brauchst Außendienst, Innungen, Messen. <em>Der Hauptgrund, warum diese Nische trotz größerem Markt hinter Gastro liegt.</em></li>
+        <li>Lange Verkaufszyklen, hohe Onboarding-Reibung: Bestehende Handwerkersoftware sitzt fest im Ablauf; du musst dich daneben setzen, nicht ersetzen.</li>
+        <li><strong>Extreme Heterogenität.</strong> SHK, Elektro, Maler, Dachdecker, GaLaBau haben verschiedene Kostenstrukturen, Großhändler und Gewohnheiten. „Handwerk“ ist keine Nische, sondern zehn — fokussiere auf zwei bis drei Gewerke.</li>
+      </ul></div>
+      <div class="q q-o"><h4><span>O</span>Chancen</h4><ul>
+        <li><strong>Die E-Rechnungspflicht ist ein Zwangs-Onboarding-Ereignis.</strong> Ab 2027 (&gt; 800.000 €) und 2028 (alle) muss jeder Betrieb umstellen. Wer 2026/27 mit einer Antwort dasteht, gewinnt Kunden zu einem Bruchteil der normalen CAC. Das Fenster ist jetzt und schließt Ende 2028.</li>
+        <li>Handwerkersoftware-Anbieter als Einbettungspartner: Sie brauchen eine Buchhaltungs-Antwort, wollen sie aber nicht bauen.</li>
+        <li>Innungen und Handwerkskammern als Multiplikatoren mit außergewöhnlicher Vertrauenswirkung — einmal aufgebaut, schwer angreifbar.</li>
+        <li><strong>Nachkalkulation als Trojanisches Pferd:</strong> Der Betrieb kauft „Ich sehe endlich, welche Baustelle Geld verdient“ und bekommt die Buchhaltung dazu. Das dreht ein Kostenprodukt in ein Umsatzprodukt.</li>
+      </ul></div>
+      <div class="q q-r"><h4><span>R</span>Risiken</h4><ul>
+        <li><strong>Die etablierten Handwerks-ERPs wachen auf.</strong> pds, Streit, Label, Sander sowie ToolTime, Plancraft und HERO sitzen näher am Kunden und haben den Vertrieb bereits bezahlt. Sie sind langsam — aber wenn einer Buchhaltung ernst nimmt, ist dein Vorsprung nur noch der Steuer-Layer.</li>
+        <li><strong>Fehlerkosten sind asymmetrisch.</strong> Eine falsch beurteilte § 13b-Leistung erzeugt echte Nachzahlungen. Die Genauigkeitsanforderung liegt deutlich über Gastro, wo Fehler meist Klassifikationsfragen sind.</li>
+        <li>Branchen-Cashflow (Zahlungsziele, Bauinsolvenzen) schlägt auf dein Inkasso durch.</li>
+        <li>Berufsrechtliche Grenze wie bei Gastro, verschärft: § 13b-Beurteilung liegt sehr nah an Steuerberatung. Die Kanzlei muss strukturell im Loop sein.</li>
+      </ul></div>
+    </div>
+  </article>
+
+  <!-- C -->
+  <article class="dossier">
+    <div class="dossier-head">
+      <h3>C · E-Commerce / Marktplatzhändler</h3>
+      <span class="tag">Arbeitstitel „Payout“ · Score 39,5</span>
+    </div>
+    <div class="dossier-body">
+      <p class="lede">Der Grund, warum diese Nische trotz mittelmäßigem Score auf der Liste steht: Taxdoo, der prägende Anbieter der Kategorie, stellt seinen zentralen Umsatzsteuer-Service zum 30.04.2026 ein und fokussiert auf Real-Time-Accounting. Ein etablierter Anbieter ist mitten in der Migration seiner eigenen Kunden; countX, Amainvoice und hellotax positionieren sich als Nachfolger. Es gibt gerade ein offenes Zeitfenster mit wechselwilligen Kunden — aber es ist ein <em>Wechsel</em>fenster, kein Vakuum.</p>
+      <p><strong>Was das Produkt tut:</strong> Marktplatz- und PSP-Rohdaten (Amazon SP-API, Shopify, eBay, Stripe, PayPal, Klarna, Mollie) in eine vollständige Buchhaltung überführen — Auszahlungen auf den Cent in Umsatz, Gebühren, Retouren, Gutschriften, Werbekosten und Steuerkonten zerlegen · OSS und innergemeinschaftliche Verbringungen bei PAN-EU/CEE-Lagerung · § 22f/§ 25e · Bestandsbewertung zum Abschlussstichtag · DATEV-Export.</p>
+      <div class="killer">
+        <span class="eyebrow">Das unkopierbare Feature</span>
+        <p><strong>Cent-genaue Payout-Auflösung mit Bestandsbewertung</strong> — also der Übergang von „Umsatzsteuer-Compliance“ zu „vollständiger, abschlussfähiger Buchhaltung“. Genau die Lücke, die Taxdoos Rückzug aus dem USt-Service und dessen Pivot zu Real-Time-Accounting am Markt sichtbar machen.</p>
+      </div>
+    </div>
+    <div class="swot">
+      <div class="q q-s"><h4><span>S</span>Stärken</h4><ul>
+        <li>Bester Datenzugang der Liste: alles über APIs, kein Papier, kein Bargeld, Onboarding ohne Außendienst.</li>
+        <li>Niedrigste CAC — die Zielgruppe ist digital erreichbar und in Foren und Communities aktiv.</li>
+        <li>Akuter Schmerz mit klarer Geldgröße: falsche USt-Behandlung im EU-Versandhandel kostet unmittelbar.</li>
+        <li>Skaliert international: Das Problem ist in AT/CH/NL/FR strukturell identisch. Die einzige Nische ohne deutschen Länderdeckel.</li>
+      </ul></div>
+      <div class="q q-w"><h4><span>W</span>Schwächen</h4><ul>
+        <li><strong>Der KI-Hebel ist strukturell schwach — der entscheidende Einwand.</strong> Die Daten kommen bereits strukturiert aus APIs. Das Problem ist ein Regel-, Mapping- und Compliance-Problem, kein Verstehensproblem. Dein Kernvorteil ist hier weitgehend wertlos; du konkurrierst auf Regelabdeckung und Integrationsbreite — dem Heimfeld der Etablierten.</li>
+        <li>Am dichtesten besetzt: countX, Amainvoice, hellotax, taxomate, das JTL/plentymarkets-Ökosystem, spezialisierte Kanzleien.</li>
+        <li>Hohe Kundenvolatilität; Marktplatz-Regeländerungen können Kundensegmente über Nacht vernichten.</li>
+        <li>Integrations-Tretmühle: Ein wachsender Teil des Teams pflegt dauerhaft APIs statt Produkt zu bauen.</li>
+      </ul></div>
+      <div class="q q-o"><h4><span>O</span>Chancen</h4><ul>
+        <li>Das Taxdoo-Migrationsfenster (Service-Ende 30.04.2026): wechselwillige, von der Kategorie bereits überzeugte Kunden ohne Missionierungsaufwand.</li>
+        <li>Aufstieg von Compliance zur vollen Buchhaltung: Die Bestandsanbieter sind USt-zentriert. Wer den Jahresabschluss vorbereitet, hebt den ARPA und die Wechselkosten deutlich.</li>
+        <li>EU-Expansion ohne Neupositionierung.</li>
+      </ul></div>
+      <div class="q q-r"><h4><span>R</span>Risiken</h4><ul>
+        <li><strong>Nach dem Migrationsfenster ist der Markt konsolidiert und du bist zu spät.</strong> Das Fenster misst sich in Monaten, nicht Jahren — und du müsstest jetzt schon ein fertiges Produkt haben. Das ist der harte Einwand: Die Chance existiert, aber nicht in deinem Bauzeitfenster.</li>
+        <li>Plattformabhängigkeit: Amazon kann Reporting-Formate ändern oder Steuerfunktionen selbst anbieten.</li>
+        <li>Preisverfall, weil das Angebot standardisiert und leicht vergleichbar ist.</li>
+      </ul></div>
+    </div>
+  </article>
+</section>
+
+<!-- 5 -->
+<section id="entscheidung">
+  <div class="sec-head"><span class="idx">05</span><h2>Entscheidung &amp; Kill-Kriterien</h2></div>
+  <div class="prose">
+    <h3>Entscheidungsregel, falls deine Ausgangslage anders ist</h3>
+    <ul>
+      <li><strong>Zugang zu Innungen, HWK oder einer Handwerkersoftware?</strong> → Handwerk/Bau. Größerer Markt, höherer ARPA, und das E-Rechnungs-Fenster löst dein GTM-Problem. Dann aber sofort starten.</li>
+      <li><strong>Bestehende E-Commerce-Kunden oder eine Taxdoo-Migrationspipeline?</strong> → E-Commerce. Nur mit vorhandenem Zugang; das Fenster ist zu kurz für einen Kaltstart.</li>
+      <li><strong>Kapital für Außendienst und ein Fünfjahreshorizont?</strong> → Handwerk/Bau, die größte Endposition.</li>
+      <li><strong>Kleines Team, schnell zu belegbarer Automatisierungsquote?</strong> → Gastronomie, die schnellste Zeit bis zum harten Wertbeweis.</li>
+    </ul>
+    <h3 style="margin-top:22px">Vier Kill-Kriterien — prüfe sie in 30 Tagen, bevor du Code schreibst</h3>
+  </div>
+  <div class="checks">
+    <div><span class="k">K1</span><p><b>Datenzugang.</b> Kommst du bei den drei bis fünf verbreitetsten Kassensystemen ohne Herstellervertrag an einen automatisierten DSFinV-K-Export? Wenn nein, ist die gesamte These vom geschenkten Pflichtformat hinfällig.</p></div>
+    <div><span class="k">K2</span><p><b>Zahlungsbereitschaft.</b> Nennen 10 von 15 befragten Betrieben die Prüfungsangst von sich aus als Top-3-Sorge — und akzeptieren mindestens 5 einen Preis ab 149 €/Monat?</p></div>
+    <div><span class="k">K3</span><p><b>Kanzlei-Partner.</b> Findest du eine gastro-spezialisierte Kanzlei, die als Freigabeinstanz im Produkt steht? Ohne sie ist der berufsrechtliche Rahmen nicht sauber lösbar.</p></div>
+    <div><span class="k">K4</span><p><b>Belegkosten.</b> Bringst du eine 240-Positionen-Metro-Rechnung für unter 5 Cent Inferenzkosten in korrekte Positionsbuchungen mit 7/19 %-Split? Rechne das an einem Prototyp durch, nicht auf Papier.</p></div>
+  </div>
+</section>
+
+<!-- 6 -->
+<section id="architektur">
+  <div class="sec-head"><span class="idx">06</span><h2>Architektur der KI-Agenten</h2></div>
+  <div class="prose">
+    <p>Der häufigste und teuerste Architekturfehler in diesem Feld: ein großes Modell, das den Beleg sieht und den Buchungssatz ausgibt. Das ist demotauglich und produktionsuntauglich — nicht auditierbar, nicht testbar, nicht versionierbar und in der Fläche nicht genau genug.</p>
+    <p class="rule-quote">Das LLM stellt Sachverhalte fest. Die Regelmaschine zieht die steuerlichen Schlüsse. Ein LLM rechnet niemals einen Betrag aus und wählt niemals frei ein Konto.</p>
+    <p>Konkret beantwortet das Modell Fragen wie „Ist das eine Bauleistung im Sinne von § 13b?“, „Ist diese Position ein Getränk oder ein Lebensmittel?“, „Ist der Leistungsempfänger Unternehmer im EU-Ausland?“. Aus diesen Feststellungen leitet eine versionierte, deterministische Regelbasis Konto, Steuerschlüssel und Beträge ab. Nur so ist jede Buchung auf eine Regel-ID und eine Belegstelle zurückführbar — was die GoBD-Nachvollziehbarkeit ohnehin verlangt.</p>
+  </div>
+
+  <div class="stack" style="margin-top:26px">
+    <div class="layer">
+      <div class="layer-l"><span class="n">Schicht 1</span><span class="t">Ingestion</span></div>
+      <div class="layer-r">
+        <span class="chip det">Bank · FinTS / EBICS / XS2A</span>
+        <span class="chip det">Kasse · DSFinV-K 2.5</span>
+        <span class="chip det">E-Rechnung · XRechnung / ZUGFeRD</span>
+        <span class="chip det">Scans, Fotos, E-Mail-Postfach</span>
+        <span class="chip det">PSP &amp; Plattformen</span>
+      </div>
+    </div>
+    <div class="layer">
+      <div class="layer-l"><span class="n">Schicht 2</span><span class="t">Wahrnehmung</span></div>
+      <div class="layer-r">
+        <span class="chip llm">Beleg-Verstehen (VLM) · Positionen, Feldkonfidenz, Fundstelle</span>
+        <span class="chip det">Dubletten &amp; Normalisierung</span>
+      </div>
+    </div>
+    <div class="layer">
+      <div class="layer-l"><span class="n">Schicht 3</span><span class="t">Urteil</span></div>
+      <div class="layer-r">
+        <span class="chip llm">Kontext-Retrieval je Mandant</span>
+        <span class="chip llm">Sachverhalts-Klassifikation</span>
+        <span class="chip det">Steuer-Regelmaschine · versioniert</span>
+        <span class="chip det">Kontierung · SKR03/04 + Branchenkonten</span>
+      </div>
+    </div>
+    <div class="layer">
+      <div class="layer-l"><span class="n">Schicht 4</span><span class="t">Abgleich &amp; Kontrolle</span></div>
+      <div class="layer-r">
+        <span class="chip det">Matching · Bank ↔ Beleg ↔ Payout</span>
+        <span class="chip det">Vollständigkeit &amp; Anomalie</span>
+        <span class="chip llm">Nischen-Prüfagent · Prüfungssimulation</span>
+      </div>
+    </div>
+    <div class="layer">
+      <div class="layer-l"><span class="n">Schicht 5</span><span class="t">Mensch &amp; Abschluss</span></div>
+      <div class="layer-r">
+        <span class="chip llm">Rückfragen-Agent → Mandant</span>
+        <span class="chip det">Review-Konsole → Kanzlei</span>
+        <span class="chip det">Melden · UStVA, ZM, DATEV-Export</span>
+      </div>
+    </div>
+    <div class="layer">
+      <div class="layer-l"><span class="n">Querschnitt</span><span class="t">Fundament</span></div>
+      <div class="layer-r">
+        <span class="chip det">Ereignisbasiertes Journal · Provenance · Festschreibung</span>
+        <span class="chip det">Orchestrator · Konfidenz-Routing · Autonomiestufen</span>
+        <span class="chip det">Eval-Harness · Golden-Mandanten</span>
+      </div>
+    </div>
+  </div>
+  <div class="legend">
+    <span><i class="llm"></i> modellgetrieben (LLM/VLM)</span>
+    <span><i class="det"></i> deterministisch (Code, Regeln, Optimierung)</span>
+    <span>Korrekturen aus Schicht 4 und 5 fließen als Lernsignal zurück in Schicht 3.</span>
+  </div>
+
+  <div class="prose" style="margin-top:32px">
+    <p><strong>Zum Orchestrator eine bewusste Einschränkung:</strong> kein frei planender Agent. Buchhaltung ist ein Prozess mit bekannten Schritten und rechtlicher Nachweispflicht. Eine explizite Zustandsmaschine ist hier nicht die konservative, sondern die richtige Wahl — testbar, wiederholbar, erklärbar. Freies Planen gehört in die Recherche-Ecke („Was verlangt dieses Behördenschreiben?“), nicht in den Buchungspfad.</p>
+    <h3>Vier Mechanismen, die über Erfolg entscheiden</h3>
+    <ul>
+      <li><strong>Konfidenz-Routing und Autonomiestufen.</strong> Jede Buchung trägt eine Konfidenz aus Extraktionssicherheit, Klassifikationssicherheit und historischer Trefferquote für diese Lieferant-Kategorie-Kombination. Daraus drei Stufen, die <em>je Lieferant und Kategorie</em> hochgestuft werden, nicht global: <strong>A0</strong> Vorschlag (Mensch bestätigt jede Buchung, Startzustand) → <strong>A1</strong> automatisch mit gewichteter Stichprobe → <strong>A2</strong> autonom, nur Ausnahmen erreichen den Menschen. Die Hochstufung ist regelbasiert nach <em>n</em> fehlerfreien Vorgängen — und gleichzeitig dein bestes Vertriebsversprechen, weil der Kunde die Quote Woche für Woche steigen sieht.</li>
+      <li><strong>Zeitlich versionierte Regeln mit Wiederholbarkeit.</strong> Steuerrecht ändert sich zum Stichtag. Jede Regel braucht einen Gültigkeitszeitraum, und gebucht wird nach der Rechtslage des <em>Leistungsdatums</em>, nicht des Verarbeitungsdatums. Nachbuchungen für Vorjahre müssen mit der damaligen Regelversion reproduzierbar sein. Wer das nachrüstet, baut das halbe System neu — es gehört ins erste Datenmodell.</li>
+      <li><strong>Provenance als Pflichtfeld.</strong> Jede Buchung speichert Regel-ID und -Version, Modellname und -version, die Belegstelle des auslösenden Werts, alle Konfidenzen und wer wann freigegeben hat. Das erfüllt die GoBD-Nachvollziehbarkeit, ermöglicht Fehleranalyse nach einem Modellwechsel und ist im Streitfall deine Beweisführung. Das Journal ist unveränderlich; Korrekturen sind Gegenbuchungen, keine Überschreibungen.</li>
+      <li><strong>Jede Korrektur ist ein Datenpunkt.</strong> Eine Korrektur wird zuerst zur Mandantenregel („dieser Lieferant immer auf dieses Konto“), bei wiederholtem Muster über mehrere Mandanten zum Kandidaten für eine globale Regel, die ein Mensch freigibt. Dieser Kreislauf ist der eigentliche Burggraben: Nach 200 Betrieben in derselben Nische hat dein Regelwerk eine Abdeckung, die ein Neueinsteiger nicht in einem Jahr aufholt.</li>
+    </ul>
+    <h3>Eval — ohne das ist das Produkt nicht verkaufbar</h3>
+    <p>Gemessen wird Konto <em>und</em> Steuerschlüssel gemeinsam: Eine Buchung mit richtigem Konto und falschem Steuerschlüssel ist falsch. Basis sind 5–10 reale, von einer Kanzlei vollständig geprüfte Jahresdatensätze als unveränderliche Golden-Mandanten, mit Regressionslauf bei jeder Änderung an Modell, Prompt oder Regel — kein Deployment ohne grünen Lauf. Kennzahlen: Automatisierungsquote, Kontierungsgenauigkeit, Korrekturquote nach Kanzleireview, Rückfragen je 100 Belege, Inferenzkosten je Beleg, Zeit bis zur fertigen UStVA. <strong>Zielkorridor für Marktreife in der Gastro-Nische: ≥ 92 % Automatisierungsquote bei ≥ 99 % Genauigkeit auf den automatisch gebuchten Fällen.</strong> Die zweite Zahl ist die wichtigere — lieber weniger automatisieren als falsch.</p>
+    <h3>Kosten- und Modellstrategie</h3>
+    <p>Bei 3.000 Belegen je Monat und Betrieb entscheidet der Preis je Beleg über die Marge. Kaskade statt Einheitsmodell: kleines Modell für den Standardfall, großes Modell nur bei niedriger Konfidenz oder unbekanntem Layout — in der Gastro-Nische sind 80–90 % der Belege wiederkehrende Layouts von 10–20 Lieferanten. Dazu ein Layout-Cache je Lieferant (ist die Positionsstruktur einer Metro-Rechnung einmal verstanden, ist die nächste ein deterministischer Parse mit Stichprobenprüfung), Prompt-Caching für die stabilen Kontextteile und ein hartes Kostenbudget je Beleg im Orchestrator mit Eskalation an den Menschen statt unbegrenzter Modellversuche.</p>
+    <h3>Der rechtliche Rahmen ist ein Architekturthema</h3>
+    <p>§ 6 Nr. 4 StBerG erlaubt das Buchen laufender Geschäftsvorfälle und die laufende Lohnabrechnung nur unter Qualifikationsauflagen — <strong>das Kontieren von Belegen und das Erteilen von Buchungsanweisungen zählen ausdrücklich nicht zu den mechanischen Tätigkeiten, die jeder erbringen darf</strong>; die Umsatzsteuer-Voranmeldung und die Einrichtung der Buchführung ebenso wenig. Daraus folgen genau zwei zulässige Modelle: das <strong>Werkzeugmodell</strong> (Software als Werkzeug in der Hand des Unternehmers, er bleibt verantwortlich — skaliert, aber schwächeres Wertversprechen) und das <strong>Kanzleimodell</strong> (eine Steuerberatungsgesellschaft steht in der Verantwortung, dein System ist ihr Produktionsmittel, die Freigabe ist ein realer Vorgang und kein Häkchen).</p>
+    <p>Ich empfehle für alle drei Nischen das Kanzleimodell, und zwar von Anfang an — sonst entwickelt sich das Produkt um die falsche Freigabestelle herum, und ein späterer Umbau trifft den gesamten Workflow. Architektonisch heißt das: Die Review-Konsole der Kanzlei ist kein Nebenfeature, sondern eine der drei wichtigsten Oberflächen des Produkts. Dazu GoBD-konform ein unveränderliches Journal mit Festschreibung und selbsterzeugter Verfahrensdokumentation, Verarbeitung in der EU, AV-Verträge und strikte Mandantentrennung im Retrieval-Index — ein Kontextleck zwischen zwei Mandanten ist hier kein Bug, sondern ein meldepflichtiger Vorfall.</p>
+  </div>
+</section>
+
+<!-- 7 -->
+<section id="modell">
+  <div class="sec-head"><span class="idx">07</span><h2>Geschäftsmodell &amp; erste zwölf Monate</h2></div>
+  <div class="prose">
+    <p>Preisanker ist nicht sevdesk, sondern die heutige Kanzleirechnung — Buchführung typischerweise 200–600 €/Monat plus Abschluss — zuzüglich des Hinzuschätzungsrisikos.</p>
+  </div>
+  <div class="tablewrap" style="margin-top:8px">
+    <table style="min-width:600px">
+      <thead><tr><th class="l">Plan</th><th class="l">Preis</th><th class="l">Inhalt</th></tr></thead>
+      <tbody>
+        <tr><td class="l">Prüfungs-Check</td><td class="l" style="font-weight:400">kostenlos</td><td class="l" style="font-weight:400">DSFinV-K-Analyse, Prüfungsbereitschafts-Score, Mängelliste — der Lead-Magnet</td></tr>
+        <tr><td class="l">Kassenbuch &amp; Belege</td><td class="l" style="font-weight:400">149 €/Monat je Standort</td><td class="l" style="font-weight:400">Belegverarbeitung, Kassenbuch, Abgleich, Prüfungssimulation</td></tr>
+        <tr><td class="l">Buchhaltung komplett</td><td class="l" style="font-weight:400">349–599 €/Monat je Standort</td><td class="l" style="font-weight:400">zzgl. UStVA und Jahresabschluss über die Partnerkanzlei</td></tr>
+        <tr><td class="l">Mehrbetrieb / Kette</td><td class="l" style="font-weight:400">individuell</td><td class="l" style="font-weight:400">Konsolidierung, Filial-Benchmarking</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="steps">
+    <div><span class="when">Monat 0–2</span><h4>Beweisführung ohne Produkt</h4><p>15 Betriebe interviewen, die vier Kill-Kriterien abarbeiten, 500 echte Belege und 3 DSFinV-K-Exporte einsammeln, Regel-DSL v0 und Prototyp der Positionssplittung. Ziel: belastbare Zahlen für Genauigkeit und Kosten je Beleg.</p></div>
+    <div><span class="when">Monat 3–5</span><h4>Design-Partner</h4><p>5 zahlende Pilotbetriebe plus 1 Partnerkanzlei. Schichten 1–4 produktiv, DSFinV-K plus die drei wichtigsten Großhändler. Zielmarke 70 % Automatisierungsquote.</p></div>
+    <div><span class="when">Monat 6–9</span><h4>Das Verkaufsargument</h4><p>Prüfungssimulation, Kassenbuch, UStVA-Entwurf, DATEV-Export, Rückfragen über WhatsApp. 25 zahlende Betriebe, 85 % Automatisierungsquote.</p></div>
+    <div><span class="when">Monat 10–12</span><h4>Kanal</h4><p>Erste Kassenhersteller-Partnerschaft, zweite Partnerkanzlei, 100–150 Betriebe, Automatisierungsquote über 90 %, Inferenzkosten belastbar unter Zielwert.</p></div>
+  </div>
+</section>
+
+<!-- 8 -->
+<section id="risiken">
+  <div class="sec-head"><span class="idx">08</span><h2>Die drei größten Risiken über alle Nischen</h2></div>
+  <div class="prose">
+    <ul>
+      <li><strong>Genauigkeit ist ein Schwellenwert, kein Verlauf.</strong> Zwischen 95 % und 99 % Kontierungsgenauigkeit liegt der Unterschied zwischen „spart Arbeit“ und „erzeugt Arbeit“. Ein Kunde, der jede Buchung nachkontrolliert, weil er dem System nicht traut, hat nichts gewonnen und kündigt. Also lieber die Automatisierungsquote drücken als die Genauigkeit.</li>
+      <li><strong>Haftung und Berufsrecht sind keine Fußnote.</strong> Die Grenze zwischen Werkzeug und Steuerberatung entscheidet über zulässige Gesellschaftsform, Produktworkflow und Versicherbarkeit. Kläre das mit einer Kanzlei, bevor die erste Zeile Produktcode entsteht.</li>
+      <li><strong>Vertriebskanal-Abhängigkeit.</strong> In allen drei Nischen ist der effiziente Weg zum Kunden ein Partner — Kassenhersteller, Handwerkersoftware, spezialisierte Kanzlei. Genau dieser Partner ist auch dein wahrscheinlichster künftiger Wettbewerber oder Käufer. Baue früh einen zweiten Kanal auf, auch wenn er teurer ist.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- 9 -->
+<section id="nachtrag">
+  <div class="sec-head"><span class="idx">09</span><h2>Nachtrag: drei geprüfte Zusatzansätze</h2></div>
+
+  <article class="dossier" style="margin-top:0">
+    <div class="dossier-head">
+      <h3>Vermögensverwaltende Holdings · „Spardosen-GmbH“</h3>
+      <span class="tag">Score 30,5 · Verdikt: nicht verfolgen</span>
+    </div>
+    <div class="dossier-body">
+      <p class="lede">Der Befund, der die Idee erledigt: Die Arbitrage, auf der sie beruht — der Steuerberater nimmt 2.000 €/Jahr für 40 Belege — wird bereits ausgenutzt, und der Preis ist unten. Resolvio bietet Jahresabschluss, Steuererklärungen und Bundesanzeiger-Offenlegung zum Festpreis von <strong>389 €/Jahr</strong>, b’steuern ab 65 €/Monat, steueragenten.de wirbt mit automatisierter Wertpapierbuchhaltung, FELSFO mit automatisierter Holding-Verwaltung. Du kämst als Vierter oder Fünfter in einen bereits entschiedenen Preiskampf.</p>
+      <ul>
+        <li><strong>Der KI-Hebel ist praktisch null.</strong> 20–80 Belege im Jahr: Depotauszug, Bankzinsen, StB-Rechnung, Notar, IHK-Beitrag. Es gibt nichts zu verstehen. Die Arbeit ist Jahresabschluss und Steuererklärung — ein deterministisches Formularproblem, kein Agentenproblem.</li>
+        <li><strong>Die gesamte Wertschöpfung ist Vorbehaltsaufgabe.</strong> KSt- und GewSt-Erklärung sowie E-Bilanz fallen nicht unter die Teilöffnung des § 6 StBerG für die laufende Buchführung. In den Nischen aus Abschnitt 04 war die Kanzlei ein Baustein — hier ist sie das gesamte Produkt.</li>
+        <li><strong>§ 50a StBerG verbietet berufsfremde Kapitalgeber.</strong> Anteile an einer Steuerberatungsgesellschaft dürfen nur Berufsträger halten, die im Unternehmen mitwirken; eine reine Finanzbeteiligung ist unzulässig. Nicht VC-finanzierbar, ohne Steuerberater als Mitgründer nicht baubar.</li>
+      </ul>
+      <div class="killer">
+        <span class="eyebrow">Was daran interessant bleibt</span>
+        <p>Die automatisierte Wertpapierbuchhaltung — Depot → HGB-Bilanz mit § 8b KStG, Streubesitzgrenze nach § 8b Abs. 4, InvStG-Teilfreistellung, Vorabpauschale. Echte Fachlogik, aber eine Komponente für den Verkauf an Kanzleien, kein Unternehmen. Und bereits im Markt.</p>
+      </div>
+    </div>
+  </article>
+
+  <article class="dossier">
+    <div class="dossier-head">
+      <h3>Self-Hosted / Open Source · maximale Datenhoheit</h3>
+      <span class="tag">Score 25,5 · Verdikt: kein Geschäftsmodell, aber eine gute Strategie</span>
+    </div>
+    <div class="dossier-body">
+      <p class="lede">Der eingebaute Widerspruch: Der Wert des Produkts ist der Agent, und der Agent braucht Inferenz. Die läuft entweder in deiner Cloud — dann ist das Datenhoheits-Versprechen und damit der einzige Kaufgrund hinfällig — oder auf der Hardware des Kunden, und dann schrumpft die Zielgruppe auf Betriebe, die eine GPU betreiben <em>und</em> 3.000 Belege im Monat buchen.</p>
+      <ul>
+        <li>Die zahlungsunwilligste Zielgruppe des Markts — die dich zudem forken kann. Der niedrigste K2-Wert im gesamten Vergleich.</li>
+        <li><strong>GoBD-Unveränderbarkeit ist bei selbst betriebener Datenbank kaum nachweisbar.</strong> Der Kunde hat Schreibrechte auf sein eigenes Journal. Technisch lösbar über Append-only und Hash-Ketten — aber die Beweislast liegt beim Betreiber, und das weiß sein Steuerberater.</li>
+        <li><strong>Der glaubwürdigste OSS-Konkurrent hat den Compliance-Beweis schon.</strong> Odoo verfügt seit Version 18 über ein IDW PS 880-Testat für den Standardumfang — mit der entscheidenden Einschränkung, dass jede Anpassung aus dem Testat fällt. Dieselbe Hürde müsstest du nehmen.</li>
+        <li><strong>Der Einwand ist billiger lösbar.</strong> EU-Hosting, AV-Vertrag, kein Training auf Kundendaten, Löschkonzept — das erledigt 95 % der Datenhoheits-Bedenken zu 5 % der Kosten.</li>
+      </ul>
+      <div class="killer">
+        <span class="eyebrow">Die richtige Stelle für die Idee</span>
+        <p><strong>Open Core statt Open Product.</strong> Stelle die langweilige, teure Infrastruktur unter freie Lizenz — DSFinV-K-Parser, XRechnung/ZUGFeRD-Bibliothek, DATEV-EXTF-Writer, SKR03/04-Mapping und vor allem die Steuer-Regel-DSL aus Abschnitt 06. Verkauft wird die Cloud mit den Agenten. Der Effekt: Steuerberater und Entwickler prüfen deine Regeln öffentlich — kostenlose Fachkontrolle für genau den Teil, an dem du haftest —, du wirst zum Referenzformat, und Inbound ersetzt Anzeigen.</p>
+      </div>
+    </div>
+  </article>
+
+  <article class="dossier">
+    <div class="dossier-head">
+      <h3>High-Volume E-Commerce-GmbHs</h3>
+      <span class="tag">Score 44,5 · aufgewertet von 39,5</span>
+    </div>
+    <div class="dossier-body">
+      <p class="lede">Die Zuspitzung auf bilanzierende GmbHs mit hohem Volumen ist substanziell, nicht kosmetisch — sie hebt die Nische auf gleiche Höhe mit Handwerk/Bau, knapp hinter Gastronomie. Vier Kriterien verschieben sich:</p>
+      <div class="tablewrap">
+        <table style="min-width:520px">
+          <thead><tr><th class="l">Kriterium</th><th>vorher</th><th>jetzt</th><th class="l">Grund</th></tr></thead>
+          <tbody>
+            <tr><td class="l">K2 · ARPA</td><td class="s4">4</td><td class="s5">5</td><td class="l" style="font-weight:400">Bilanzierende GmbH: HGB-Abschluss, E-Bilanz, Offenlegung nach § 325 HGB. 500–1.500 €/Monat statt 150 €.</td></tr>
+            <tr><td class="l">K4 · KI-Hebel</td><td class="s2">2</td><td class="s3">3</td><td class="l" style="font-weight:400">Der ursprüngliche Einwand galt nur der Verkaufsseite. Die Einkaufsseite ist Belegchaos.</td></tr>
+            <tr><td class="l">K8 · Moat</td><td class="s3">3</td><td class="s4">4</td><td class="l" style="font-weight:400">Bestandsbewertung bindet den Kunden über den Bilanzstichtag hinaus.</td></tr>
+            <tr><td class="l">K1 · Markt</td><td class="s3">3</td><td class="s2">2</td><td class="l" style="font-weight:400">Realistisch nur Größenordnung 8.000–15.000 Betriebe.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>Zu K4: Dass die Daten strukturiert aus APIs kommen, gilt für Amazon, Shopify und Stripe — nicht für die <strong>Beschaffungsseite</strong> einer FBA-GmbH. Handelsrechnungen aus China, Zollbescheide und ATLAS-Belege, Einfuhrumsatzsteuer mit ihrem an vollständige Belege gebundenen Vorsteuerabzug, Frachtführer- und Zollagentenrechnungen, Reverse-Charge-Dienstleister aus Drittländern. Dort ist Papier, dort ist der Agent wertvoll.</p>
+      <div class="killer">
+        <span class="eyebrow">Der Wedge ist der Abschluss, nicht die Umsatzsteuer</span>
+        <p>Die USt-Ecke ist besetzt und im Preisverfall. Unbesetzt ist die <strong>Bestandsbewertung</strong>: Bestände in ausländischen Lagern müssen zum Stichtag korrekt erfasst und bewertet werden — Anschaffungskosten inklusive Einfuhrabgaben und Fracht, Niederstwertprinzip, Währungsumrechnung, verteilt über PAN-EU-Lager. Die USt-Anbieter hören genau davor auf. Nebeneffekt: Bei 1.000 €/Monat ARPA sind Inferenzkosten kein Engpass mehr — das löst die größte Schwäche der Gastro-Empfehlung.</p>
+      </div>
+      <p><strong>Bleibende Einwände:</strong> Amazon-Abhängigkeit in Reporting und Regelwerk · das weitgehend verstrichene Taxdoo-Migrationsfenster (30.04.2026) · der Abschluss ist wieder Vorbehaltsaufgabe, die Kanzlei muss auch hier ins Konstrukt.</p>
+    </div>
+  </article>
+
+  <div class="verdict" style="margin-top:34px">
+    <div class="verdict-main">
+      <span class="stamp">Was alle drei verbindet</span>
+      <p class="lead">Alle drei Ansätze laufen auf dieselbe Wand zu: Jahresabschluss, E-Bilanz und Steuererklärungen sind Vorbehaltsaufgaben. Bei der Spardosen-GmbH <em>ist</em> das die gesamte Wertschöpfung — deshalb ohne Zulassung nicht baubar. Bei den E-Commerce-GmbHs ist es der teuerste und klebrigste Teil — deshalb der richtige Wedge. Self-Hosted umgeht die Wand vollständig — und hat genau deshalb keine Umsätze.</p>
+    </div>
+    <div class="verdict-side">
+      <span class="eyebrow">Aktualisierte Empfehlung</span>
+      <p>Gastronomie bleibt vorn, aber der Abstand ist geschrumpft. Der Entscheider zwischen Gastronomie und E-Commerce-GmbH ist kein Argument, sondern ein Anruf:</p>
+      <p>Gewinnst du zuerst eine spezialisierte <strong>E-Commerce-Kanzlei</strong> als Design-Partner, nimm die E-Commerce-GmbHs. Gewinnst du zuerst einen <strong>Kassenhersteller</strong>, nimm Gastronomie. Beide Nischen scheitern ohne diesen Partner und funktionieren mit ihm.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 10 -->
+<section id="vorgaenger">
+  <div class="sec-head"><span class="idx">10</span><h2>Zwei Vorgänger: Zeitgold und SMACC</h2></div>
+  <div class="prose">
+    <p>Beide haben zwischen 2015 und 2020 genau das versucht, was dieses Dossier vorschlägt. Ihre Fehlermodi sind unterschiedlich — und beide instruktiv.</p>
+  </div>
+
+  <article class="dossier">
+    <div class="dossier-head">
+      <h3>Zeitgold · gescheitert an der versteckten Handarbeit</h3>
+      <span class="tag">2015–2020 · über 50 Mio. € · Exit an Deel 2021</span>
+    </div>
+    <div class="dossier-body">
+      <p class="lede">Gegründet 2015 von Stefan Jeschonnek, Jan Deepen und Kobi Eldar — Jeschonnek und Deepen zuvor Mitgründer von SumUp — in Berlin und Tel Aviv. Zielgruppe: kleine Ladengeschäfte, Restaurants, Handwerker. Insgesamt über 50 Mio. € Kapital, davon 27 Mio. € im Mai 2020. <strong>Ende Juli 2020, zwei Monate nach dieser Runde, wurde das Produkt eingestellt und 75 von 120 Mitarbeitern entlassen.</strong></p>
+      <p><strong>Das Modell war der Fehler, nicht die Ausführung.</strong> Der Kunde legte Belege in eine Box, ein <em>Kurier</em> holte sie regelmäßig ab, Zeitgold digitalisierte und leitete an den Steuerberater weiter. Das ist eine Logistik- und Backoffice-Dienstleistung mit KI-Fassade. Die Selbstbegründung war bemerkenswert offen: Man habe es nicht geschafft, eine Lösung anzubieten, <strong>ohne weiterhin beträchtliche Investitionen in manuelle Arbeit zu leisten</strong> — und genau diese laufenden Investitionen machten das Produkt weder skalierbar noch wirtschaftlich tragfähig. Jeder Neukunde brachte menschliche Grenzkosten mit, die nicht schnell genug fielen.</p>
+      <div class="killer">
+        <span class="eyebrow">Der zweite, wichtigere Mechanismus</span>
+        <p><strong>Schlechte Automatisierung kostet den Kunden mehr als gar keine.</strong> Business Insider dokumentiert eine Berliner Lebensmittelhändlerin, die statt 10.500 € Buchhaltungskosten mehr als das Doppelte aufwenden musste, weil Buchungen aus einem halben Jahr rückwirkend korrigiert werden mussten — bei gleichzeitig unzuverlässiger Kurierabholung. Ehemalige Kunden verglichen das Ende mit Air Berlin. Das ist der Schwellenwert-Effekt aus Abschnitt 08 mit Preisschild: In einer empfehlungsgetriebenen Zielgruppe entsteht daraus keine Abwanderung, sondern eine negative Vertriebsmaschine.</p>
+      </div>
+      <p>Corona war Beschleuniger, nicht Ursache — die Zielgruppe musste lange schließen, dazu kamen Vertriebsprobleme. Danach Neustart als <em>Sorted</em>, eine Steuersoftware für Freiberufler, und im August 2021 die Übernahme durch Deel. Die Gesellschafter wurden Deel-Gesellschafter, der Kaufpreis ist unbekannt.</p>
+    </div>
+  </article>
+
+  <article class="dossier">
+    <div class="dossier-head">
+      <h3>SMACC · nicht an der Technik gescheitert, sondern am Segment</h3>
+      <span class="tag">2015 gegründet · kein Insolvenzfall · Spin-out Hypatos 2018</span>
+    </div>
+    <div class="dossier-body">
+      <p class="lede">Gegründet 2015 in Potsdam von Dr. Ulrich Erxleben, Janosch Novak und Stefan Korsch; 3,5 Mio. € Seed plus 1,75 Mio. € Forschungsgelder; Cloud-Lösung für Eingangsrechnungsverarbeitung im Mittelstand.</p>
+      <p>Als SMACC Mitte 2018 seine KI-Software veröffentlichte, war die Resonanz unerwartet groß — <strong>vor allem aus Großunternehmen</strong>, deren Rückmeldung lautete, die Technik funktioniere besser als ihre eigenen Automatisierungssysteme, sie brauche nur SAP-Integration. Daraufhin gründeten Erxleben und Novak Ende 2018 <strong>Hypatos</strong> als Spin-out; Erxleben trat als SMACC-Geschäftsführer zurück, Novak übernahm SMACC allein. Hypatos sammelte später 10 Mio. € ein und existiert weiter.</p>
+      <div class="killer">
+        <span class="eyebrow">Die unbequemere Lehre</span>
+        <p><strong>Gute Belegverstehens-KI ist für Konzerne mehr wert als für Kleinbetriebe.</strong> Ein Enterprise-Kunde zahlt sechsstellig bei Millionen Dokumenten; ein Handwerksbetrieb zahlt 80 € bei 200 Belegen. Wer die Technik wirklich beherrscht, wird vom Markt nach oben gezogen. Taxdoos Pivot zu Real-Time-Accounting ist dasselbe Muster in neuerer Auflage.</p>
+      </div>
+      <p style="font-size:14px;color:var(--ink-3)">Der formale Endzustand der SMACC GmbH ließ sich nicht verifizieren — Handelsregisterdaten waren nicht abrufbar.</p>
+    </div>
+  </article>
+
+  <div class="prose" style="margin-top:36px">
+    <h3>Konsequenzen für diesen Plan</h3>
+    <p>Zeitgold hat exakt die hier empfohlene Nische bedient — kleine Läden und Restaurants — und dabei über 50 Mio. € verloren. Das ist ein direkter Einwand gegen Abschnitt 05 und gehört ausgesprochen. Vier Unterschiede sind substanziell, nicht kosmetisch:</p>
+  </div>
+  <div class="tablewrap" style="margin-top:12px">
+    <table style="min-width:600px">
+      <thead><tr><th class="l">Zeitgold 2015–2020</th><th class="l">Dieser Ansatz 2026</th></tr></thead>
+      <tbody>
+        <tr><td class="l" style="font-weight:400">Papierabholung per Kurier: Logistikkosten und für den Kunden sichtbare Ausfälle</td><td class="l" style="font-weight:400">API- und Foto-Erfassung; <strong>DSFinV-K existierte zu Zeitgolds Startzeit noch nicht</strong></td></tr>
+        <tr><td class="l" style="font-weight:400">Verkauft wurde Zeitersparnis</td><td class="l" style="font-weight:400">Verkauft wird Prüfungssicherheit — anderer Preisanker, anderer Kündigungsgrund</td></tr>
+        <tr><td class="l" style="font-weight:400">Saß <em>neben</em> dem Steuerberater: trug die Schuld, ohne den Prozess zu besitzen</td><td class="l" style="font-weight:400">Kanzleimodell mit Freigabe im Produkt (Abschnitt 06)</td></tr>
+        <tr><td class="l" style="font-weight:400">Manuelle Arbeit als dauerhafter Kostenposten</td><td class="l" style="font-weight:400">Autonomiestufen mit messbarer Hochstufung je Lieferant (Abschnitt 06)</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="prose" style="margin-top:24px">
+    <p>Der ehrliche Gegeneinwand: Zeitgold hat ebenfalls geglaubt, die KI hole auf. Jede Generation glaubt das. Der Unterschied darf keine Überzeugung sein, sondern muss eine Messung sein — daher Kill-Kriterium 4 und der Eval-Harness aus Abschnitt 06.</p>
+    <p class="rule-quote">Manuelle Minuten je Mandant und Monat, aufgeschlüsselt nach Kohorten-Alter. Fällt diese Kurve mit zunehmendem Mandantenalter nicht steil, bist du ein Dienstleister mit Softwarebewertung.</p>
+    <p>Das ist die eine Zahl, die Zeitgolds Investoren vor der 27-Millionen-Runde hätten sehen müssen — und die ab Monat 1 mitlaufen sollte.</p>
+    <p><strong>Gewichtung gegenüber Abschnitt 09:</strong> Zeitgold ist der empirische Beleg für die Arithmetik der Resthandarbeit. Bei 149 €/Monat ist sie nicht finanzierbar, bei 1.000 €/Monat schon. Genau die Größe, an der Zeitgold gestorben ist, ist bei bilanzierenden E-Commerce-GmbHs tragbar und bei kleinen Gastronomiebetrieben nicht. Das kehrt die Empfehlung nicht um, verkleinert aber den Abstand zwischen Platz 1 und Platz 2 weiter.</p>
+  </div>
+</section>
+
+<!-- Quellen -->
+<section id="quellen">
+  <div class="sec-head"><span class="idx">—</span><h2>Quellen</h2></div>
+  <ul class="src">
+    <li><a href="https://www.getmika.de/">Get Mika GmbH — Produkt und Positionierung</a></li>
+    <li><a href="https://getmika.de/buchhaltungssoftware">mika — Buchhaltungssoftware für GmbH &amp; UG (Preise, Zielgruppe)</a></li>
+    <li><a href="https://www.deutsche-startups.de/2023/10/02/mika-buchhalter/">deutsche-startups.de — Mika, ein digitaler Buchhalter</a></li>
+    <li><a href="https://www.e-rechnungen.org/e-rechnung-pflicht-fristen">E-Rechnungspflicht: Fristen 2025, 2027, 2028</a></li>
+    <li><a href="https://www.frankfurt-main.ihk.de/recht/uebersicht-alle-rechtsthemen/steuerrecht/umsatzsteuer-national/e-rechnungspflicht-ab-2025-6055774">IHK Frankfurt — E-Rechnungspflicht ab 2025</a></li>
+    <li><a href="https://www.gesetze-im-internet.de/stberg/__6.html">§ 6 StBerG — Gesetze im Internet</a></li>
+    <li><a href="https://www.lfst.bayern.de/fileadmin/RESSOURCEN/LfSt/Recht_zur_Steuerberatung/Merkblatt_Buchfuehrungshilfe.pdf">Bayerisches LfSt — Merkblatt Buchführungshilfe (Kontierungsvorbehalt)</a></li>
+    <li><a href="https://www.ihk.de/chemnitz/recht-und-steuern/rechtsinformationen/gewerberecht/nach-branchen/dienstleister/merkblatt-buchfuehrungshilfe-4777532">IHK Chemnitz — Merkblatt Buchführungshilfe</a></li>
+    <li><a href="https://www.zdh.de/daten-und-fakten/kennzahlen-des-handwerks/wirtschaftlicher-stellenwert-des-handwerks-2025/">ZDH — Kennzahlen des Handwerks 2025</a></li>
+    <li><a href="https://www.dehoga.de/zahlen-fakten/">DEHOGA Bundesverband — Zahlen &amp; Fakten</a></li>
+    <li><a href="https://www.dehoga-mv.de/artikel/dehoga-umfrage-umsatzeinbusse-und-kostensteigerungen">DEHOGA-Konjunkturumfrage Februar 2026</a></li>
+    <li><a href="https://kassenprofis-nord.de/kassennachschau/">Kassennachschau 2026 — was das Finanzamt prüft</a></li>
+    <li><a href="https://magicpos.de/kassensichv-tse-dsfinv-k-2025-26-praxisleitfaden-fuer-handel-gastro-hotellerie-und-apotheken/">KassenSichV / TSE / DSFinV-K — Praxisleitfaden 2025/26</a></li>
+    <li><a href="https://compilager.de/DSFinV-K-einfach-erklaert-Was-die-digitale-Schnittstelle-fuer-Kassensysteme-ist-und-wie-sie-funktioniert">DSFinV-K einfach erklärt</a></li>
+    <li><a href="https://www.countx.com/eng/post/taxdoo-stellt-umsatzsteuer-service-ein">countX — Taxdoo stellt Umsatzsteuer-Service ein</a></li>
+    <li><a href="https://omr.com/de/reviews/contenthub/taxdoo-alternativen">OMR Reviews — Taxdoo-Alternativen 2026</a></li>
+    <li><a href="https://www.sbz-online.de/meldungen/handwerkersoftware-tooltime-integriert-direkte-datev-schnittstelle">SBZ — ToolTime integriert direkte DATEV-Schnittstelle</a></li>
+    <li><a href="https://resolvio.com/holding-jahresabschluss-guenstig">Resolvio — Holding-Jahresabschluss zum Festpreis 389 €</a></li>
+    <li><a href="https://www.bsteuern.com/blog/vermogensverwaltende-gmbh-guide">b’steuern — Vermögensverwaltende GmbH, Guide und Preise</a></li>
+    <li><a href="https://www.steueragenten.de/mandanten/steuerberater-vermoegensverwaltende-gmbh/">steueragenten.de — Steuerberater für die vermögensverwaltende GmbH</a></li>
+    <li><a href="https://felsfo.com/holding/verwalten/">FELSFO — Holding-Verwaltung</a></li>
+    <li><a href="https://www.haufe.de/id/norm/steuerberatungsgesetz-50a-kapitalbindung-HI45153.html">§ 50a StBerG Kapitalbindung — Haufe</a></li>
+    <li><a href="https://www.intero-technologies.de/blog/odoo-19/gobd-konforme-buchfuhrung-mit-odoo-was-unternehmen-wissen-sollten-672">GoBD-konforme Buchführung mit Odoo — IDW PS 880-Testat ab Version 18</a></li>
+    <li><a href="https://anexum.eu/blog/open-source-erp-vergleich/">Open-Source-ERP im Vergleich 2026</a></li>
+    <li><a href="https://onlinebilanz.de/buchfuehrung-amazon-fba/">OnlineBilanz — Buchführung Amazon FBA 2026</a></li>
+    <li><a href="https://onlinebilanz.de/amazon-fba-steuerberater/">OnlineBilanz — Amazon FBA: Bestandsbewertung und Auslandslager</a></li>
+    <li><a href="https://www.deutsche-startups.de/2020/07/31/zeitgold-offline-sorted/">deutsche-startups — Zeitgold gibt auf, Neustart als Sorted</a></li>
+    <li><a href="https://t3n.de/news/kurz-geldsegen-zeitgold-stellt-1305883/">t3n — Zeitgold stellt Produkt ein und entlässt 75 Mitarbeiter</a></li>
+    <li><a href="https://www.businessinsider.de/gruenderszene/fintech/zeitgold-fintech-kunden-rechnen-ab/">Business Insider — Was lief schief beim 50-Millionen-Fintech?</a></li>
+    <li><a href="https://www.businessinsider.de/wirtschaft/wie-damals-bei-air-berlin-ehemalige-kunden-rechnen-mit-millionen-fintech-zeitgold-ab/">Business Insider — Ehemalige Kunden rechnen mit Zeitgold ab</a></li>
+    <li><a href="https://www.deel.com/blog/deel-x-zeitgold/">Deel — Zeitgold is now part of Deel (August 2021)</a></li>
+    <li><a href="https://www.businessinsider.de/gruenderszene/technologie/portrait-startup-hypatos-ki/">Business Insider — Hypatos, das SMACC-Spin-out</a></li>
+    <li><a href="https://www.businessinsider.de/gruenderszene/allgemein/smacc-erxleben-korsch-novak-cherry-rocket-dvh-finanzierung/">Business Insider — 3,5 Mio. € für Smacc</a></li>
+    <li><a href="https://www.starting-up.de/news/news-investments/deeptech-start-up-hypatos-erhaelt-10-mio-euro.html">StartingUp — Hypatos erhält 10 Mio. €</a></li>
+  </ul>
+</section>
+
+<footer>
+  <span>Strategiedossier · Nischenwahl KI-Buchhaltung</span>
+  <span class="num">Stand August 2026 · als „Größenordnung“ markierte Werte vor Investitionsentscheidung verifizieren</span>
+</footer>
+
+</div>
